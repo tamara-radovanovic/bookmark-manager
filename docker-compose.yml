@@ -1,0 +1,38 @@
+# Local development infrastructure only — never used in production.
+#
+# Compose reads a `.env` file sitting next to this one automatically, so the
+# values below (${POSTGRES_USER} etc.) come from the root `.env` you create
+# from `.env.example`. This keeps real credentials out of git while keeping
+# the compose file itself safe to commit.
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # host_port:container_port — Postgres inside the container always listens
+      # on 5432; POSTGRES_PORT lets you change the HOST port if 5432 is already
+      # taken by a local Postgres install.
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Named volume: Docker manages where this actually lives on disk.
+      # Survives `docker compose down`; only removed with `down -v`.
+      #
+      # Postgres 18 changed its recommended layout: it now wants the mount at
+      # /var/lib/postgresql (not .../data), and creates a major-version
+      # subdirectory underneath itself. Mounting at .../data directly makes
+      # the image refuse to start on 18+.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      # -U/-d must match the credentials above, or pg_isready reports
+      # "not ready" even once Postgres is actually up.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
