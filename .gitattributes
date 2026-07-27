@@ -1,0 +1,12 @@
+# Force LF line endings for all text files, regardless of each contributor's
+# local core.autocrlf setting — matches .editorconfig's end_of_line = lf.
+# Prevents phantom "modified" files in git status after every save on Windows.
+* text=auto eol=lf
+
+# Binary assets — never touched by line-ending conversion.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
