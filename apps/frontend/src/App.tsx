@@ -4,6 +4,8 @@ import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { NewBookmarkPage } from "./pages/NewBookmarkPage";
+import { EditBookmarkPage } from "./pages/EditBookmarkPage";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/bookmarks/new" element={<NewBookmarkPage />} />
+          <Route path="/bookmarks/:id/edit" element={<EditBookmarkPage />} />
         </Route>
       </Routes>
     </AuthProvider>
