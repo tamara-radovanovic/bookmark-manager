@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Bookmark } from "@bookmark-manager/shared";
+import { TagBadge } from "../tags/TagBadge";
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
@@ -26,6 +27,14 @@ export function BookmarkCard({ bookmark, onDelete, isDeleting }: BookmarkCardPro
       </div>
 
       {bookmark.description && <p className="text-sm text-gray-700">{bookmark.description}</p>}
+
+      {bookmark.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {bookmark.tags.map((tag) => (
+            <TagBadge key={tag.id} tag={tag} />
+          ))}
+        </div>
+      )}
 
       <div className="flex gap-3 text-sm">
         <Link to={`/bookmarks/${bookmark.id}/edit`} className="text-blue-600 hover:underline">

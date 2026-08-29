@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { isAxiosError } from "axios";
-import type { CreateBookmarkInput } from "@bookmark-manager/shared";
+import type { CreateBookmarkInput, Tag } from "@bookmark-manager/shared";
+import { createTag, listTags } from "../../services/tags.service";
 
 interface FieldErrors {
   url?: string;
@@ -36,6 +37,48 @@ export function BookmarkForm({ initialValues, onSubmit, submitLabel }: BookmarkF
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>(initialValues?.tag_ids ?? []);
+  const [newTagName, setNewTagName] = useState("");
+  const [isCreatingTag, setIsCreatingTag] = useState(false);
+  const [tagError, setTagError] = useState<string | null>(null);
+
+  useEffect(() => {
+    listTags()
+      .then(setAvailableTags)
+      .catch(() => setTagError("Couldn't load your tags."));
+  }, []);
+
+  function toggleTag(id: string) {
+    setSelectedTagIds((current) =>
+      current.includes(id) ? current.filter((tagId) => tagId !== id) : [...current, id],
+    );
+  }
+
+  async function handleCreateTag() {
+    const name = newTagName.trim();
+    if (!name) {
+      return;
+    }
+
+    setTagError(null);
+    setIsCreatingTag(true);
+    try {
+      const tag = await createTag({ name });
+      setAvailableTags((current) => [...current, tag]);
+      setSelectedTagIds((current) => [...current, tag.id]);
+      setNewTagName("");
+    } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 409) {
+        setTagError("You already have a tag with that name.");
+      } else {
+        setTagError("Couldn't create that tag. Please try again.");
+      }
+    } finally {
+      setIsCreatingTag(false);
+    }
+  }
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setFormError(null);
@@ -53,6 +96,7 @@ export function BookmarkForm({ initialValues, onSubmit, submitLabel }: BookmarkF
         title,
         description: description || undefined,
         favicon_url: faviconUrl || undefined,
+        tag_ids: selectedTagIds,
       });
     } catch (err) {
       if (isAxiosError(err) && err.response?.status === 400) {
@@ -130,6 +174,49 @@ export function BookmarkForm({ initialValues, onSubmit, submitLabel }: BookmarkF
           className="rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
         />
       </div>
+
+      <fieldset className="flex flex-col gap-2">
+        <legend className="text-sm font-medium">Tags (optional)</legend>
+
+        {availableTags.length > 0 && (
+          <div className="flex flex-col gap-1">
+            {availableTags.map((tag) => (
+              <label key={tag.id} className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={selectedTagIds.includes(tag.id)}
+                  onChange={() => toggleTag(tag.id)}
+                />
+                {tag.name}
+              </label>
+            ))}
+          </div>
+        )}
+
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newTagName}
+            onChange={(event) => setNewTagName(event.target.value)}
+            placeholder="New tag name"
+            className="flex-1 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={handleCreateTag}
+            disabled={isCreatingTag || !newTagName.trim()}
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium disabled:opacity-50"
+          >
+            Add tag
+          </button>
+        </div>
+
+        {tagError && (
+          <p role="alert" className="text-sm text-red-600">
+            {tagError}
+          </p>
+        )}
+      </fieldset>
 
       {formError && (
         <p role="alert" className="text-sm text-red-600">
