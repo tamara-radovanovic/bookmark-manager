@@ -23,8 +23,12 @@ export class BookmarksController {
   constructor(private readonly bookmarksService: BookmarksService) {}
 
   @Get()
-  findAll(@CurrentUser() userId: string, @Query("search") search?: string) {
-    return this.bookmarksService.findAllForUser(userId, search);
+  findAll(
+    @CurrentUser() userId: string,
+    @Query("search") search?: string,
+    @Query("tag") tag?: string,
+  ) {
+    return this.bookmarksService.findAllForUser(userId, search, tag);
   }
 
   @Get(":id")

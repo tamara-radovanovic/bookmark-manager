@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Bookmark } from "@bookmark-manager/shared";
+import type { Bookmark, Tag } from "@bookmark-manager/shared";
 import { Navbar } from "../components/layout/Navbar";
 import { BookmarkList } from "../components/bookmarks/BookmarkList";
+import { BookmarkSearch } from "../components/bookmarks/BookmarkSearch";
+import { TagList } from "../components/tags/TagList";
 import { deleteBookmark, listBookmarks } from "../services/bookmarks.service";
+import { createTag, deleteTag, listTags } from "../services/tags.service";
 
 export function DashboardPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -12,13 +15,37 @@ export function DashboardPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [tagsError, setTagsError] = useState<string | null>(null);
+
+  const [search, setSearch] = useState("");
+  const [activeTagName, setActiveTagName] = useState<string | null>(null);
+
+  const handleSearch = useCallback((value: string) => {
+    setSearch(value);
+  }, []);
+
+  const loadTags = useCallback(() => {
+    listTags()
+      .then(setTags)
+      .catch(() => setTagsError("Couldn't load your tags."));
+  }, []);
+
+  useEffect(() => {
+    loadTags();
+  }, [loadTags]);
+
+  // No isLoading(true) reset here on purpose — only the very first load shows
+  // the loading state; search/tag-filter changes swap the list in place
+  // without a flicker, which reads better for a debounced search box.
   useEffect(() => {
     let cancelled = false;
 
-    listBookmarks()
+    listBookmarks(search || undefined, activeTagName || undefined)
       .then((data) => {
         if (!cancelled) {
           setBookmarks(data);
+          setLoadError(null);
         }
       })
       .catch(() => {
@@ -35,7 +62,7 @@ export function DashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [search, activeTagName]);
 
   async function handleDelete(id: string) {
     if (!window.confirm("Delete this bookmark?")) {
@@ -54,6 +81,34 @@ export function DashboardPage() {
     }
   }
 
+  async function handleDeleteTag(id: string) {
+    if (!window.confirm("Delete this tag? It will be removed from any bookmarks that use it.")) {
+      return;
+    }
+
+    try {
+      await deleteTag(id);
+      const deletedTag = tags.find((tag) => tag.id === id);
+      if (deletedTag && deletedTag.name === activeTagName) {
+        setActiveTagName(null);
+      }
+      loadTags();
+      setBookmarks((current) =>
+        current.map((bookmark) => ({
+          ...bookmark,
+          tags: bookmark.tags.filter((tag) => tag.id !== id),
+        })),
+      );
+    } catch {
+      setTagsError("Couldn't delete that tag. Please try again.");
+    }
+  }
+
+  async function handleCreateTag(name: string) {
+    await createTag({ name });
+    loadTags();
+  }
+
   return (
     <div>
       <Navbar />
@@ -67,6 +122,21 @@ export function DashboardPage() {
             New bookmark
           </Link>
         </div>
+
+        <BookmarkSearch onSearch={handleSearch} />
+
+        {tagsError && (
+          <p role="alert" className="text-sm text-red-600">
+            {tagsError}
+          </p>
+        )}
+        <TagList
+          tags={tags}
+          activeTagName={activeTagName}
+          onSelectTag={setActiveTagName}
+          onDeleteTag={handleDeleteTag}
+          onCreateTag={handleCreateTag}
+        />
 
         {isLoading && <p>Loading...</p>}
         {loadError && (

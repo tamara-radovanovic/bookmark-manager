@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import request from "supertest";
 import { AuthModule } from "../src/auth/auth.module";
 import { BookmarksModule } from "../src/bookmarks/bookmarks.module";
+import { TagsModule } from "../src/tags/tags.module";
 import { HttpExceptionFilter } from "../src/common/filters/http-exception.filter";
 import { buildValidationExceptionFactory } from "../src/common/pipes/validation-exception-factory";
 import { buildTestDatabaseUrl, ensureTestDatabaseExists } from "./test-db.util";
@@ -32,6 +33,7 @@ describe("Bookmarks (e2e)", () => {
         }),
         AuthModule,
         BookmarksModule,
+        TagsModule,
       ],
     }).compile();
 
@@ -74,6 +76,25 @@ describe("Bookmarks (e2e)", () => {
 
       expect(response.body).toMatchObject({ url: "https://example.com", title: "Example" });
       expect(response.body.id).toEqual(expect.any(String));
+    });
+
+    it("never leaks user_id or raw Date objects — only the documented public shape", async () => {
+      const response = await request(app.getHttpServer())
+        .post("/bookmarks")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({ url: "https://shape-check.example.com", title: "Shape check" })
+        .expect(201);
+
+      expect(response.body).toEqual({
+        id: expect.any(String),
+        url: "https://shape-check.example.com",
+        title: "Shape check",
+        description: null,
+        favicon_url: null,
+        tags: [],
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
+      });
     });
 
     it("rejects a malformed URL with 400 VALIDATION_FAILED", async () => {
@@ -229,6 +250,101 @@ describe("Bookmarks (e2e)", () => {
         .get(`/bookmarks/${id}`)
         .set("Authorization", `Bearer ${tokenA}`)
         .expect(404);
+    });
+  });
+
+  describe("tags on bookmarks", () => {
+    let reactTagId: string;
+    let tutorialTagId: string;
+    let othersTagId: string;
+
+    beforeAll(async () => {
+      const react = await request(app.getHttpServer())
+        .post("/tags")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({ name: "react-e2e" });
+      reactTagId = (react.body as { id: string }).id;
+
+      const tutorial = await request(app.getHttpServer())
+        .post("/tags")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({ name: "tutorial-e2e" });
+      tutorialTagId = (tutorial.body as { id: string }).id;
+
+      const othersTag = await request(app.getHttpServer())
+        .post("/tags")
+        .set("Authorization", `Bearer ${tokenB}`)
+        .send({ name: "not-yours" });
+      othersTagId = (othersTag.body as { id: string }).id;
+    });
+
+    it("attaches owned tags when creating a bookmark", async () => {
+      const response = await request(app.getHttpServer())
+        .post("/bookmarks")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({
+          url: "https://react.dev",
+          title: "React docs",
+          tag_ids: [reactTagId, tutorialTagId],
+        })
+        .expect(201);
+
+      expect(response.body.tags).toHaveLength(2);
+    });
+
+    it("rejects another user's tag_id with 400 INVALID_TAG_IDS, not a silent skip", async () => {
+      const response = await request(app.getHttpServer())
+        .post("/bookmarks")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({ url: "https://example.com", title: "x", tag_ids: [othersTagId] })
+        .expect(400);
+
+      expect(response.body).toEqual({ error_code: "INVALID_TAG_IDS" });
+    });
+
+    it("filters by tag name and keeps every tag on the matching bookmark", async () => {
+      const response = await request(app.getHttpServer())
+        .get("/bookmarks?tag=react-e2e")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .expect(200);
+
+      expect(response.body).toHaveLength(1);
+      expect(response.body[0].tags).toHaveLength(2);
+    });
+
+    it("PATCH tag_ids replaces the tag set", async () => {
+      const created = await request(app.getHttpServer())
+        .post("/bookmarks")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({ url: "https://patch-tags.example.com", title: "x", tag_ids: [reactTagId] });
+      const id = (created.body as { id: string }).id;
+
+      const patched = await request(app.getHttpServer())
+        .patch(`/bookmarks/${id}`)
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({ tag_ids: [tutorialTagId] })
+        .expect(200);
+
+      expect(patched.body.tags).toEqual([expect.objectContaining({ id: tutorialTagId })]);
+    });
+
+    it("deleting a tag detaches it from bookmarks without deleting them", async () => {
+      const created = await request(app.getHttpServer())
+        .post("/bookmarks")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({ url: "https://cascade.example.com", title: "x", tag_ids: [reactTagId] });
+      const id = (created.body as { id: string }).id;
+
+      await request(app.getHttpServer())
+        .delete(`/tags/${reactTagId}`)
+        .set("Authorization", `Bearer ${tokenA}`)
+        .expect(204);
+
+      const after = await request(app.getHttpServer())
+        .get(`/bookmarks/${id}`)
+        .set("Authorization", `Bearer ${tokenA}`)
+        .expect(200);
+      expect(after.body.tags).toEqual([]);
     });
   });
 });

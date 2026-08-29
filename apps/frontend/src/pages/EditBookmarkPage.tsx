@@ -49,6 +49,7 @@ export function EditBookmarkPage() {
               title: bookmark.title,
               description: bookmark.description ?? undefined,
               favicon_url: bookmark.favicon_url ?? undefined,
+              tag_ids: bookmark.tags.map((tag) => tag.id),
             }}
             onSubmit={handleSubmit}
             submitLabel="Save changes"

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
+import { IsArray, IsNotEmpty, IsOptional, IsString, IsUrl, IsUUID } from "class-validator";
 
 // Every field optional, matching UpdateBookmarkInput = Partial<CreateBookmarkInput>
 // in packages/shared. Written by hand rather than via @nestjs/mapped-types'
@@ -22,4 +22,9 @@ export class UpdateBookmarkDto {
   @IsOptional()
   @IsUrl()
   favicon_url?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID("4", { each: true })
+  tag_ids?: string[];
 }
