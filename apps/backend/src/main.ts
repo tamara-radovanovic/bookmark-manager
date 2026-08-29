@@ -1,6 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { AppModule } from "./app.module";
+import cookieParser from "cookie-parser";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.use(cookieParser());
   // CORS (credentials: true, restricted to the frontend origin) is added in Phase 2
   // once the frontend actually sends authenticated requests with the refresh-token cookie.
   await app.listen(process.env.PORT ?? 3000);

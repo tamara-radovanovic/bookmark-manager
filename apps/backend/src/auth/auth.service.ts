@@ -70,4 +70,43 @@ export class AuthService {
 
     return { access_token, refreshToken };
   }
+
+  async refresh(
+    token: string | undefined,
+  ): Promise<{ access_token: string; refreshToken: string }> {
+    if (!token) {
+      throw new UnauthorizedException("AUTH_REFRESH_INVALID");
+    }
+
+    try {
+      await this.jwtService.verifyAsync(token, {
+        secret: this.configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
+      });
+    } catch {
+      throw new UnauthorizedException("AUTH_REFRESH_INVALID");
+    }
+
+    const tokenHash = createHash("sha256").update(token).digest("hex");
+    const storedToken = await this.refreshTokensRepository.findOneBy({ token_hash: tokenHash });
+
+    if (!storedToken) {
+      throw new UnauthorizedException("AUTH_REFRESH_INVALID");
+    }
+
+    await this.refreshTokensRepository.delete(storedToken.id);
+
+    const access_token = await this.jwtService.signAsync({ sub: storedToken.user_id });
+    const refreshToken = await this.issueRefreshToken(storedToken.user_id);
+
+    return { access_token, refreshToken };
+  }
+
+  async logout(token: string | undefined): Promise<void> {
+    if (!token) {
+      return;
+    }
+
+    const tokenHash = createHash("sha256").update(token).digest("hex");
+    await this.refreshTokensRepository.delete({ token_hash: tokenHash });
+  }
 }
