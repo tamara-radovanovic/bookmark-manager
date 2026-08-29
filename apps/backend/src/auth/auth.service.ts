@@ -9,7 +9,7 @@ import { JwtService, JwtSignOptions } from "@nestjs/jwt";
 import { UnauthorizedException } from "@nestjs/common";
 import { LoginDto } from "./dto/login.dto";
 import { ConfigService } from "@nestjs/config";
-import { createHash } from "crypto";
+import { createHash, randomUUID } from "crypto";
 
 const BCRYPT_SALT_ROUNDS = 10;
 @Injectable()
@@ -28,7 +28,10 @@ export class AuthService {
       "JWT_REFRESH_EXPIRES_IN",
     ) as JwtSignOptions["expiresIn"];
 
-    const token = await this.jwtService.signAsync({ sub: userId }, { secret, expiresIn });
+    const token = await this.jwtService.signAsync(
+      { sub: userId, jti: randomUUID() },
+      { secret, expiresIn },
+    );
     const decoded = this.jwtService.decode<{ exp: number }>(token);
 
     const tokenHash = createHash("sha256").update(token).digest("hex");

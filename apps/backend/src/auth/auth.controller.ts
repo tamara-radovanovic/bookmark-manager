@@ -1,9 +1,9 @@
-import { Body, Controller, Post, Res, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, Req, UseGuards } from "@nestjs/common";
 import type { Response, Request } from "express";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
-import { JwtAuthGuard} from "./guards/jwt-auth.guard";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 
 const REFRESH_TOKEN_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 @Controller("auth")
@@ -18,6 +18,7 @@ export class AuthController {
   }
 
   @Post("login")
+  @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const { access_token, refreshToken } = await this.authService.login(dto);
     this.setRefreshTokenCookie(res, refreshToken);
@@ -34,6 +35,7 @@ export class AuthController {
   }
 
   @Post("refresh")
+  @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const { access_token, refreshToken } = await this.authService.refresh(
       req.cookies?.refresh_token,
@@ -43,6 +45,7 @@ export class AuthController {
   }
 
   @Post("logout")
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.authService.logout(req.cookies?.refresh_token);

@@ -11,13 +11,13 @@ export class JwtAuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("AUTH_UNAUTHORIZED");
     }
 
     try {
       request.user = await this.jwtService.verifyAsync<{ sub: string }>(token);
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("AUTH_UNAUTHORIZED");
     }
 
     return true;

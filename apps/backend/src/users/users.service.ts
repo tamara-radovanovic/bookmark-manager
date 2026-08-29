@@ -14,8 +14,8 @@ export class UsersService {
     return this.userRepository.findOneBy({ email });
   }
 
-  async create(email: string, hashedPassword: string) : Promise<User> {
-    const user = this.userRepository.create({ email, password: hashedPassword});
+  async create(email: string, hashedPassword: string): Promise<User> {
+    const user = this.userRepository.create({ email, password: hashedPassword });
     return this.userRepository.save(user);
   }
 }
