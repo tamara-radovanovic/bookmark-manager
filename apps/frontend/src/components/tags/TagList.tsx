@@ -44,7 +44,7 @@ export function TagList({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
@@ -59,26 +59,26 @@ export function TagList({
         </div>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <input
           type="text"
           value={newTagName}
           onChange={(event) => setNewTagName(event.target.value)}
           placeholder="New tag name"
-          className="rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
+          className="rounded-full border-[1.5px] border-border-input bg-[#fffdfe] px-4 py-2 font-body text-sm text-ink-700 outline-none placeholder:text-ink-200 focus:border-blush-400 focus:shadow-[0_0_0_3px_rgba(233,140,174,0.18)]"
         />
         <button
           type="button"
           onClick={handleCreate}
           disabled={isCreating || !newTagName.trim()}
-          className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium disabled:opacity-50"
+          className="rounded-full border border-blush-300 bg-white px-4 py-2 font-heading text-sm font-semibold text-ink-400 hover:bg-blush-100 hover:text-blush-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Add tag
         </button>
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="font-body text-sm text-danger-text">
           {error}
         </p>
       )}

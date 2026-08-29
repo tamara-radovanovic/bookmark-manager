@@ -9,11 +9,11 @@ interface BookmarkListProps {
 
 export function BookmarkList({ bookmarks, onDelete, deletingId }: BookmarkListProps) {
   if (bookmarks.length === 0) {
-    return <p className="text-gray-500">No bookmarks yet.</p>;
+    return <p className="text-lg text-ink-300">No bookmarks yet.</p>;
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-5">
       {bookmarks.map((bookmark) => (
         <BookmarkCard
           key={bookmark.id}

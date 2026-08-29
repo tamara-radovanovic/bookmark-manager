@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Input } from "../ui/Input";
 
 interface BookmarkSearchProps {
   onSearch: (value: string) => void;
@@ -21,12 +22,12 @@ export function BookmarkSearch({ onSearch, debounceMs = 300 }: BookmarkSearchPro
   }, [value, debounceMs]);
 
   return (
-    <input
+    <Input
       type="search"
       value={value}
       onChange={(event) => setValue(event.target.value)}
       placeholder="Search bookmarks..."
-      className="rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+      className="w-full max-w-md"
     />
   );
 }

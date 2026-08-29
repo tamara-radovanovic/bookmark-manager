@@ -15,10 +15,17 @@ export function NewBookmarkPage() {
   return (
     <div>
       <Navbar />
-      <div className="flex flex-col items-center gap-6 p-6">
-        <h1 className="text-2xl font-semibold">New bookmark</h1>
-        <BookmarkForm onSubmit={handleSubmit} submitLabel="Create bookmark" />
-      </div>
+      <main className="flex justify-center px-8 pt-18 pb-30">
+        <div className="w-full max-w-160 rounded-[28px] border border-blush-100 bg-white/90 p-12 shadow-[0_24px_60px_-30px_rgba(160,90,115,0.35)]">
+          <h1 className="mb-1.5 font-heading text-[38px] font-bold text-ink-900">New bookmark</h1>
+          <p className="mb-8.5 text-lg text-ink-300">Add a link to your shelf.</p>
+          <BookmarkForm
+            onSubmit={handleSubmit}
+            submitLabel="Create bookmark"
+            onCancel={() => navigate("/dashboard")}
+          />
+        </div>
+      </main>
     </div>
   );
 }

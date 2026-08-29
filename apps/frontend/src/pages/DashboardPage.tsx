@@ -112,40 +112,49 @@ export function DashboardPage() {
   return (
     <div>
       <Navbar />
-      <div className="flex flex-col gap-4 p-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Your bookmarks</h1>
+      <main className="mx-auto max-w-[1120px] px-12 pt-14 pb-30">
+        <div className="mb-9 flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <h1 className="mb-2 font-heading text-[44px] font-bold tracking-tight text-ink-900">
+              Your bookmarks
+            </h1>
+            <p className="font-heading text-lg font-bold text-blush-700">
+              {bookmarks.length} saved {bookmarks.length === 1 ? "link" : "links"}
+            </p>
+          </div>
           <Link
             to="/bookmarks/new"
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white"
+            className="rounded-full bg-linear-to-b from-blush-400 to-blush-500 px-7.5 py-4.5 font-heading text-lg font-bold text-white no-underline shadow-[0_14px_26px_-14px_rgba(226,105,143,0.85)] hover:from-[#ee7fa4] hover:to-[#d75c84]"
           >
-            New bookmark
+            + New bookmark
           </Link>
         </div>
 
-        <BookmarkSearch onSearch={handleSearch} />
+        <div className="mb-9 flex flex-col gap-4">
+          <BookmarkSearch onSearch={handleSearch} />
 
-        {tagsError && (
-          <p role="alert" className="text-sm text-red-600">
-            {tagsError}
-          </p>
-        )}
-        <TagList
-          tags={tags}
-          activeTagName={activeTagName}
-          onSelectTag={setActiveTagName}
-          onDeleteTag={handleDeleteTag}
-          onCreateTag={handleCreateTag}
-        />
+          {tagsError && (
+            <p role="alert" className="font-body text-sm text-danger-text">
+              {tagsError}
+            </p>
+          )}
+          <TagList
+            tags={tags}
+            activeTagName={activeTagName}
+            onSelectTag={setActiveTagName}
+            onDeleteTag={handleDeleteTag}
+            onCreateTag={handleCreateTag}
+          />
+        </div>
 
-        {isLoading && <p>Loading...</p>}
+        {isLoading && <p className="text-lg text-ink-300">Loading...</p>}
         {loadError && (
-          <p role="alert" className="text-red-600">
+          <p role="alert" className="font-body text-danger-text">
             {loadError}
           </p>
         )}
         {deleteError && (
-          <p role="alert" className="text-red-600">
+          <p role="alert" className="font-body text-danger-text">
             {deleteError}
           </p>
         )}
@@ -153,7 +162,7 @@ export function DashboardPage() {
         {!isLoading && !loadError && (
           <BookmarkList bookmarks={bookmarks} onDelete={handleDelete} deletingId={deletingId} />
         )}
-      </div>
+      </main>
     </div>
   );
 }

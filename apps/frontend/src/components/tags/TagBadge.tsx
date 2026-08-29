@@ -11,8 +11,10 @@ export function TagBadge({ tag, isActive, onClick, onRemove }: TagBadgeProps) {
   return (
     <span
       onClick={onClick}
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-        isActive ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700"
+      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 font-heading text-sm font-semibold ${
+        isActive
+          ? "bg-linear-to-b from-blush-400 to-blush-500 text-white"
+          : "border border-blush-200 bg-blush-100 text-blush-600"
       } ${onClick ? "cursor-pointer" : ""}`}
     >
       {tag.name}
