@@ -51,11 +51,11 @@ A phase is not "done" until:
 
 ## Phase 4 — Bookmarks CRUD (Frontend)
 
-- [ ] `BookmarkList`, `BookmarkCard`
-- [ ] `BookmarkForm` (shared between create/edit)
-- [ ] `DashboardPage` wiring it all together
-- [ ] Loading and error states for every request
-- [ ] Optimistic UI or at least clear pending/success/error feedback on create/edit/delete
+- [x] `BookmarkList`, `BookmarkCard`
+- [x] `BookmarkForm` (shared between create/edit)
+- [x] `DashboardPage` wiring it all together
+- [x] Loading and error states for every request
+- [x] Optimistic UI or at least clear pending/success/error feedback on create/edit/delete
 
 ## Phase 5 — Tags & Filtering/Search
 
