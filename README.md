@@ -463,6 +463,8 @@ _Details to be filled in during Phase 8 (see `PHASES.md`) — this is the agreed
 
 Minimum bar before a phase is considered "done": auth flow and bookmark CRUD have both unit and integration coverage, including at least one test per known edge case (expired token, duplicate tag, invalid URL, unauthorized access to another user's bookmark).
 
+Implemented so far: `apps/backend/src/auth/auth.service.spec.ts` (unit, mocked dependencies) and `apps/backend/test/auth.e2e-spec.ts` (integration — real HTTP requests through a throwaway `bookmark_manager_test` Postgres database on the same local Docker instance). See "Backend Tests" under Local Setup for how to run them.
+
 ---
 
 ## Local Setup
@@ -549,5 +551,14 @@ pnpm lint           # ESLint across all workspaces (one shared root config)
 pnpm format         # Prettier — rewrites files to match the project style
 pnpm format:check   # Prettier — reports mismatches without writing (used in CI)
 ```
+
+### Backend Tests
+
+```bash
+pnpm --filter backend test        # Unit tests (mocked dependencies, no DB)
+pnpm --filter backend test:e2e    # Integration tests — needs Docker Postgres running
+```
+
+`test:e2e` connects to the same local Postgres container as normal dev, but uses a separate `bookmark_manager_test` database (created automatically on first run) so it never touches your real dev data.
 
 ---

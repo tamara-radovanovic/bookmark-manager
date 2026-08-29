@@ -22,15 +22,15 @@ A phase is not "done" until:
 
 ## Phase 1 — Database & Auth Backend
 
-- [ ] `users` entity + migration
-- [ ] `refresh_tokens` entity + migration
-- [ ] Password hashing (bcrypt)
-- [ ] `POST /auth/register`, `POST /auth/login`
-- [ ] Access token generation (JWT, short-lived)
-- [ ] Refresh token generation + hash stored in DB + httpOnly cookie
-- [ ] `POST /auth/refresh`, `POST /auth/logout`
-- [ ] `JwtAuthGuard` for protected routes
-- [ ] Edge cases: expired refresh token, reused/revoked refresh token, wrong password, duplicate email on register
+- [x] `users` entity + migration
+- [x] `refresh_tokens` entity + migration
+- [x] Password hashing (bcrypt)
+- [x] `POST /auth/register`, `POST /auth/login`
+- [x] Access token generation (JWT, short-lived)
+- [x] Refresh token generation + hash stored in DB + httpOnly cookie
+- [x] `POST /auth/refresh`, `POST /auth/logout`
+- [x] `JwtAuthGuard` for protected routes
+- [x] Edge cases: expired refresh token, reused/revoked refresh token, wrong password, duplicate email on register
 
 ## Phase 2 — Auth Frontend
 
