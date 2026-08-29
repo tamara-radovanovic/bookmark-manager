@@ -3,11 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { User } from "../../users/entities/user.entity";
+import { Tag } from "../../tags/entities/tag.entity";
 
 @Entity("bookmarks")
 export class Bookmark {
@@ -32,6 +35,14 @@ export class Bookmark {
   @ManyToOne(() => User, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user!: User;
+
+  @ManyToMany(() => Tag)
+  @JoinTable({
+    name: "bookmark_tags",
+    joinColumn: { name: "bookmark_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" },
+  })
+  tags!: Tag[];
 
   @CreateDateColumn()
   created_at!: Date;

@@ -9,6 +9,7 @@ export interface Bookmark {
   favicon_url: string | null;
   tags: Tag[];
   created_at: string;
+  updated_at: string;
 }
 
 /** Body for POST /bookmarks */

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
+import { IsArray, IsNotEmpty, IsOptional, IsString, IsUrl, IsUUID } from "class-validator";
 
 export class CreateBookmarkDto {
   @IsUrl()
@@ -15,4 +15,9 @@ export class CreateBookmarkDto {
   @IsOptional()
   @IsUrl()
   favicon_url?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID("4", { each: true })
+  tag_ids?: string[];
 }
