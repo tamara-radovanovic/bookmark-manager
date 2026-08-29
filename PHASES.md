@@ -42,12 +42,12 @@ A phase is not "done" until:
 
 ## Phase 3 — Bookmarks CRUD (Backend)
 
-- [ ] `bookmark` entity + migration
-- [ ] `GET /bookmarks` (with `search` and `tag` query params)
-- [ ] `GET /bookmarks/:id`, `POST /bookmarks`, `PATCH /bookmarks/:id`, `DELETE /bookmarks/:id`
-- [ ] Ownership check: a user can only read/edit/delete their own bookmarks
-- [ ] Input validation (URL format, required `title`)
-- [ ] Edge cases: accessing another user's bookmark (should 404, not 403 — don't leak existence), malformed URL, empty title
+- [x] `bookmark` entity + migration
+- [x] `GET /bookmarks` (with `search` query param — `tag` param deferred to Phase 5, no tag tables exist yet)
+- [x] `GET /bookmarks/:id`, `POST /bookmarks`, `PATCH /bookmarks/:id`, `DELETE /bookmarks/:id`
+- [x] Ownership check: a user can only read/edit/delete their own bookmarks
+- [x] Input validation (URL format, required `title`)
+- [x] Edge cases: accessing another user's bookmark (should 404, not 403 — don't leak existence), malformed URL, empty title
 
 ## Phase 4 — Bookmarks CRUD (Frontend)
 
