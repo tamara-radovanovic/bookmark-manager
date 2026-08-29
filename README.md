@@ -254,10 +254,6 @@ Response 401 (missing/expired/revoked token):
 
 ### Bookmarks
 
-> **Note:** `tags` (response field), `tag_ids` (request field), and the `tag`
-> query param below are the Phase 5 target shape — no tag tables exist yet,
-> so they're not implemented as of Phase 3. Everything else on this page is live.
-
 #### Get all bookmarks
 
 ```
@@ -266,7 +262,7 @@ GET /bookmarks
 
 Query params (all optional):
   search=react        -- filters by title or URL
-  tag=tutorial         -- filters by tag name (not yet implemented — Phase 5)
+  tag=tutorial         -- filters by tag name
 
 Response 200:
 [
@@ -277,7 +273,8 @@ Response 200:
     "description": "Optional description",
     "favicon_url": "https://example.com/favicon.ico",
     "tags": [{ "id": "uuid", "name": "react" }],
-    "created_at": "2025-01-01T00:00:00.000Z"
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "updated_at": "2025-01-01T00:00:00.000Z"
   }
 ]
 ```
@@ -296,7 +293,8 @@ Response 200:
   "description": "Optional description",
   "favicon_url": "https://example.com/favicon.ico",
   "tags": [{ "id": "uuid", "name": "react" }],
-  "created_at": "2025-01-01T00:00:00.000Z"
+  "created_at": "2025-01-01T00:00:00.000Z",
+  "updated_at": "2025-01-01T00:00:00.000Z"
 }
 
 Response 404:
@@ -443,10 +441,10 @@ Response 204: No content
 
 ### Tags
 
-| Component  | Description                                 |
-| ---------- | ------------------------------------------- |
-| `TagList`  | Displays all user tags as clickable filters |
-| `TagBadge` | Small pill badge shown on `BookmarkCard`    |
+| Component  | Description                                                                        |
+| ---------- | ---------------------------------------------------------------------------------- |
+| `TagList`  | Clickable tag filters on the dashboard, plus create/delete a tag                   |
+| `TagBadge` | Small pill badge — read-only on `BookmarkCard`, clickable + removable in `TagList` |
 
 ### UI (Reusable)
 

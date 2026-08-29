@@ -43,7 +43,7 @@ A phase is not "done" until:
 ## Phase 3 — Bookmarks CRUD (Backend)
 
 - [x] `bookmark` entity + migration
-- [x] `GET /bookmarks` (with `search` query param — `tag` param deferred to Phase 5, no tag tables exist yet)
+- [x] `GET /bookmarks` (with `search` query param — `tag` param added in Phase 5, once tag tables existed)
 - [x] `GET /bookmarks/:id`, `POST /bookmarks`, `PATCH /bookmarks/:id`, `DELETE /bookmarks/:id`
 - [x] Ownership check: a user can only read/edit/delete their own bookmarks
 - [x] Input validation (URL format, required `title`)
@@ -59,11 +59,11 @@ A phase is not "done" until:
 
 ## Phase 5 — Tags & Filtering/Search
 
-- [ ] `tag` entity + migration, `bookmark_tags` junction table with composite PK
-- [ ] `GET /tags`, `POST /tags`, `DELETE /tags/:id`
-- [ ] `TagList`, `TagBadge`
-- [ ] Wire up `search` and `tag` filters on the frontend (debounced search input)
-- [ ] Edge case: deleting a tag that's still attached to bookmarks
+- [x] `tag` entity + migration, `bookmark_tags` junction table with composite PK
+- [x] `GET /tags`, `POST /tags`, `DELETE /tags/:id`
+- [x] `TagList`, `TagBadge`
+- [x] Wire up `search` and `tag` filters on the frontend (debounced search input)
+- [x] Edge case: deleting a tag that's still attached to bookmarks
 
 ## Phase 6 — UI Polish
 
