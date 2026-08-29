@@ -7,6 +7,11 @@ import cookieParser from "cookie-parser";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: process.env.FRONTEND_URL ?? "http://localhost:5173",
+    credentials: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -17,8 +22,6 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.use(cookieParser());
-  // CORS (credentials: true, restricted to the frontend origin) is added in Phase 2
-  // once the frontend actually sends authenticated requests with the refresh-token cookie.
   await app.listen(process.env.PORT ?? 3000);
 }
 
