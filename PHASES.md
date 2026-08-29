@@ -34,11 +34,11 @@ A phase is not "done" until:
 
 ## Phase 2 — Auth Frontend
 
-- [ ] `AuthContext` (holds access token in memory, exposes login/logout/refresh)
-- [ ] `LoginForm`, `RegisterForm` with validation
-- [ ] `ProtectedRoute` wrapper
-- [ ] Axios/fetch instance with interceptor: on 401, try `/auth/refresh` once, then retry original request or redirect to `/login`
-- [ ] On app load, silently attempt `/auth/refresh` to restore session
+- [x] `AuthContext` (holds access token in memory, exposes login/logout/refresh)
+- [x] `LoginForm`, `RegisterForm` with validation
+- [x] `ProtectedRoute` wrapper
+- [x] Axios/fetch instance with interceptor: on 401, try `/auth/refresh` once, then retry original request or redirect to `/login`
+- [x] On app load, silently attempt `/auth/refresh` to restore session
 
 ## Phase 3 — Bookmarks CRUD (Backend)
 

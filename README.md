@@ -511,6 +511,7 @@ JWT_ACCESS_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
 COOKIE_SECRET=your_cookie_signing_secret_here
 PORT=3000
+FRONTEND_URL=http://localhost:5173
 ```
 
 **`apps/frontend/.env`**
