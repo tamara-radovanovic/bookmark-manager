@@ -12,6 +12,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     TypeOrmModule.forFeature([RefreshToken]),
     UsersModule,
     JwtModule.registerAsync({
+      global: true,
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

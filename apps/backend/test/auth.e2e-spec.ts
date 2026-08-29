@@ -5,38 +5,10 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import cookieParser from "cookie-parser";
 import request from "supertest";
-import { Client } from "pg";
 import { AuthModule } from "../src/auth/auth.module";
 import { HttpExceptionFilter } from "../src/common/filters/http-exception.filter";
-
-/**
- * Runs the real HTTP layer (controllers, pipes, filters, guards) against a
- * throwaway Postgres database on the same local Postgres instance used for
- * dev — same credentials/host/port as DATABASE_URL, different database name.
- * Uses synchronize+dropSchema (never done outside tests) so each run starts
- * from a clean, migration-free schema without needing to run migrations here.
- */
-function buildTestDatabaseUrl(): string {
-  const baseUrl = new URL(process.env.DATABASE_URL ?? "");
-  baseUrl.pathname = "/bookmark_manager_test";
-  return baseUrl.toString();
-}
-
-async function ensureTestDatabaseExists(testDatabaseUrl: string): Promise<void> {
-  const testDbName = new URL(testDatabaseUrl).pathname.slice(1);
-  const maintenanceUrl = new URL(testDatabaseUrl);
-  maintenanceUrl.pathname = "/postgres";
-
-  const client = new Client({ connectionString: maintenanceUrl.toString() });
-  await client.connect();
-  const { rowCount } = await client.query("SELECT 1 FROM pg_database WHERE datname = $1", [
-    testDbName,
-  ]);
-  if (rowCount === 0) {
-    await client.query(`CREATE DATABASE "${testDbName}"`);
-  }
-  await client.end();
-}
+import { buildValidationExceptionFactory } from "../src/common/pipes/validation-exception-factory";
+import { buildTestDatabaseUrl, ensureTestDatabaseExists } from "./test-db.util";
 
 describe("Auth (e2e)", () => {
   let app: INestApplication;
@@ -61,7 +33,12 @@ describe("Auth (e2e)", () => {
 
     app = moduleRef.createNestApplication();
     app.useGlobalPipes(
-      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        exceptionFactory: buildValidationExceptionFactory(),
+      }),
     );
     app.useGlobalFilters(new HttpExceptionFilter());
     app.use(cookieParser());

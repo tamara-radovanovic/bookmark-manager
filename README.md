@@ -254,6 +254,10 @@ Response 401 (missing/expired/revoked token):
 
 ### Bookmarks
 
+> **Note:** `tags` (response field), `tag_ids` (request field), and the `tag`
+> query param below are the Phase 5 target shape — no tag tables exist yet,
+> so they're not implemented as of Phase 3. Everything else on this page is live.
+
 #### Get all bookmarks
 
 ```
@@ -262,7 +266,7 @@ GET /bookmarks
 
 Query params (all optional):
   search=react        -- filters by title or URL
-  tag=tutorial         -- filters by tag name
+  tag=tutorial         -- filters by tag name (not yet implemented — Phase 5)
 
 Response 200:
 [
@@ -317,8 +321,12 @@ Body:
 Response 201: created bookmark object
 
 Response 400 (invalid URL / missing title):
-{ "error_code": "BOOKMARK_VALIDATION_FAILED", "fields": ["url"] }
+{ "error_code": "VALIDATION_FAILED", "fields": ["url"] }
 ```
+
+> `VALIDATION_FAILED` is the generic shape used for every endpoint's request-body
+> validation failures (not just bookmarks) — one consistent error_code + a
+> `fields` array naming what failed, rather than a different code per resource.
 
 #### Update bookmark
 
