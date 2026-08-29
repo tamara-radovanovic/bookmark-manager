@@ -4,20 +4,20 @@ import { TagBadge } from "./TagBadge";
 
 interface TagListProps {
   tags: Tag[];
-  activeTagName: string | null;
-  onSelectTag: (name: string | null) => void;
+  activeTagNames: string[];
+  onToggleTag: (name: string) => void;
   onDeleteTag: (id: string) => void;
   onCreateTag: (name: string) => Promise<void>;
 }
 
-// Doubles as the tag management UI: clicking a tag filters the dashboard by
-// it (clicking the active one again clears the filter), each tag carries a
-// delete button, and the input at the bottom creates new tags — there's no
-// separate "manage tags" page in the project plan.
+// Doubles as the tag management UI: clicking a tag toggles it into/out of
+// the active filter set (multiple tags = AND — a bookmark must have all of
+// them), each tag carries a delete button, and the input at the bottom
+// creates new tags — there's no separate "manage tags" page in the project plan.
 export function TagList({
   tags,
-  activeTagName,
-  onSelectTag,
+  activeTagNames,
+  onToggleTag,
   onDeleteTag,
   onCreateTag,
 }: TagListProps) {
@@ -51,8 +51,8 @@ export function TagList({
             <TagBadge
               key={tag.id}
               tag={tag}
-              isActive={activeTagName === tag.name}
-              onClick={() => onSelectTag(activeTagName === tag.name ? null : tag.name)}
+              isActive={activeTagNames.includes(tag.name)}
+              onClick={() => onToggleTag(tag.name)}
               onRemove={() => onDeleteTag(tag.id)}
             />
           ))}

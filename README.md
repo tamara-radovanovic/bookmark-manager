@@ -261,8 +261,10 @@ GET /bookmarks
 🔒 Protected
 
 Query params (all optional):
-  search=react        -- filters by title or URL
-  tag=tutorial         -- filters by tag name
+  search=react                    -- filters by title or URL
+  tags=tutorial&tags=react        -- filters by tag name; repeat the param for
+                                      more than one — a bookmark must have
+                                      ALL of them (AND, not OR)
 
 Response 200:
 [

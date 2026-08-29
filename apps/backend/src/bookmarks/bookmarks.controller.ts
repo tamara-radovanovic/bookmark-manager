@@ -26,9 +26,13 @@ export class BookmarksController {
   findAll(
     @CurrentUser() userId: string,
     @Query("search") search?: string,
-    @Query("tag") tag?: string,
+    @Query("tags") tags?: string | string[],
   ) {
-    return this.bookmarksService.findAllForUser(userId, search, tag);
+    // Express/qs gives a plain string for a single repeated query key
+    // ("?tags=a") and an array once it repeats ("?tags=a&tags=b") — always
+    // normalize to an array so the service only has one shape to handle.
+    const tagList = tags === undefined ? undefined : ([] as string[]).concat(tags);
+    return this.bookmarksService.findAllForUser(userId, search, tagList);
   }
 
   @Get(":id")

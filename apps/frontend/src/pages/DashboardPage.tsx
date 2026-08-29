@@ -19,11 +19,17 @@ export function DashboardPage() {
   const [tagsError, setTagsError] = useState<string | null>(null);
 
   const [search, setSearch] = useState("");
-  const [activeTagName, setActiveTagName] = useState<string | null>(null);
+  const [activeTagNames, setActiveTagNames] = useState<string[]>([]);
 
   const handleSearch = useCallback((value: string) => {
     setSearch(value);
   }, []);
+
+  function handleToggleTag(name: string) {
+    setActiveTagNames((current) =>
+      current.includes(name) ? current.filter((tagName) => tagName !== name) : [...current, name],
+    );
+  }
 
   const loadTags = useCallback(() => {
     listTags()
@@ -41,7 +47,7 @@ export function DashboardPage() {
   useEffect(() => {
     let cancelled = false;
 
-    listBookmarks(search || undefined, activeTagName || undefined)
+    listBookmarks(search || undefined, activeTagNames.length > 0 ? activeTagNames : undefined)
       .then((data) => {
         if (!cancelled) {
           setBookmarks(data);
@@ -62,7 +68,7 @@ export function DashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, activeTagName]);
+  }, [search, activeTagNames]);
 
   async function handleDelete(id: string) {
     if (!window.confirm("Delete this bookmark?")) {
@@ -89,8 +95,8 @@ export function DashboardPage() {
     try {
       await deleteTag(id);
       const deletedTag = tags.find((tag) => tag.id === id);
-      if (deletedTag && deletedTag.name === activeTagName) {
-        setActiveTagName(null);
+      if (deletedTag) {
+        setActiveTagNames((current) => current.filter((name) => name !== deletedTag.name));
       }
       loadTags();
       setBookmarks((current) =>
@@ -140,8 +146,8 @@ export function DashboardPage() {
           )}
           <TagList
             tags={tags}
-            activeTagName={activeTagName}
-            onSelectTag={setActiveTagName}
+            activeTagNames={activeTagNames}
+            onToggleTag={handleToggleTag}
             onDeleteTag={handleDeleteTag}
             onCreateTag={handleCreateTag}
           />

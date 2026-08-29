@@ -302,14 +302,36 @@ describe("Bookmarks (e2e)", () => {
       expect(response.body).toEqual({ error_code: "INVALID_TAG_IDS" });
     });
 
-    it("filters by tag name and keeps every tag on the matching bookmark", async () => {
+    it("filters by a single tag name and keeps every tag on the matching bookmark", async () => {
       const response = await request(app.getHttpServer())
-        .get("/bookmarks?tag=react-e2e")
+        .get("/bookmarks?tags=react-e2e")
         .set("Authorization", `Bearer ${tokenA}`)
         .expect(200);
 
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].tags).toHaveLength(2);
+      const reactDocs = response.body.find(
+        (bookmark: { title: string }) => bookmark.title === "React docs",
+      );
+      expect(reactDocs.tags).toHaveLength(2);
+    });
+
+    it("filters by multiple tags with AND semantics — a bookmark must have every one", async () => {
+      await request(app.getHttpServer())
+        .post("/bookmarks")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .send({
+          url: "https://react-only.example.com",
+          title: "React only",
+          tag_ids: [reactTagId],
+        });
+
+      const response = await request(app.getHttpServer())
+        .get("/bookmarks?tags=react-e2e&tags=tutorial-e2e")
+        .set("Authorization", `Bearer ${tokenA}`)
+        .expect(200);
+
+      const titles = response.body.map((bookmark: { title: string }) => bookmark.title);
+      expect(titles).toContain("React docs"); // has both tags
+      expect(titles).not.toContain("React only"); // has only one of the two
     });
 
     it("PATCH tag_ids replaces the tag set", async () => {
