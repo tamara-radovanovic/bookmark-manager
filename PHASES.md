@@ -83,11 +83,11 @@ A phase is not "done" until:
 
 ## Phase 8 — Testing
 
-- [ ] Backend unit tests (services): auth logic, bookmarks logic, tags logic
-- [ ] Backend integration tests (controllers, against a test database)
-- [ ] Frontend unit tests (Vitest + React Testing Library): forms, protected route behavior, key components
-- [ ] E2E happy path: register → login → create bookmark → search/filter → edit → delete → logout
-- [ ] Edge cases from each phase above are covered, not just happy paths
+- [x] Backend unit tests (services): auth logic, bookmarks logic, tags logic
+- [x] Backend integration tests (controllers, against a test database)
+- [x] Frontend unit tests (Vitest + React Testing Library): forms, protected route behavior, key components
+- [x] E2E happy path: register → login → create bookmark → search/filter → edit → delete → logout
+- [x] Edge cases from each phase above are covered, not just happy paths
 
 ---
 
