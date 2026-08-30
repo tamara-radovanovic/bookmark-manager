@@ -13,7 +13,10 @@ export function RegisterPage() {
         <RegisterForm />
         <p className="mt-6 text-center text-[17px] text-ink-300">
           Already have an account?{" "}
-          <Link to="/login" className="font-bold text-blush-600 no-underline hover:text-blush-700">
+          <Link
+            to="/login"
+            className="rounded-sm font-bold text-blush-600 no-underline hover:text-blush-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
+          >
             Log in
           </Link>
         </p>

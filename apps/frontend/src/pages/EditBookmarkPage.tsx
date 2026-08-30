@@ -3,11 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { Bookmark, CreateBookmarkInput } from "@bookmark-manager/shared";
 import { Navbar } from "../components/layout/Navbar";
 import { BookmarkForm } from "../components/bookmarks/BookmarkForm";
+import { Spinner } from "../components/ui/Spinner";
+import { useToast } from "../context/ToastContext";
 import { getBookmark, updateBookmark } from "../services/bookmarks.service";
 
 export function EditBookmarkPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { showSuccess } = useToast();
   const [bookmark, setBookmark] = useState<Bookmark | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -29,6 +32,7 @@ export function EditBookmarkPage() {
     }
     await updateBookmark(id, values);
     navigate("/dashboard");
+    showSuccess("Bookmark updated.");
   }
 
   return (
@@ -39,7 +43,11 @@ export function EditBookmarkPage() {
           <h1 className="mb-1.5 font-heading text-[38px] font-bold text-ink-900">Edit bookmark</h1>
           <p className="mb-8.5 text-lg text-ink-300">Update this link on your shelf.</p>
 
-          {isLoading && <p className="text-lg text-ink-300">Loading...</p>}
+          {isLoading && (
+            <div className="flex justify-center py-6">
+              <Spinner />
+            </div>
+          )}
           {loadError && (
             <p role="alert" className="font-body text-danger-text">
               {loadError}

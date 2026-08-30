@@ -31,6 +31,13 @@
   --color-danger-bg: #fdefed;
   --color-danger-text: #c9736a;
   --color-danger-text-hover: #b0554b;
+
+  /* Sage green — matches the mint book spines in the background art,
+     used for success toasts (mirrors the danger-* structure above). */
+  --color-success-border: #b9dcc2;
+  --color-success-bg: #eef8f0;
+  --color-success-text: #3f8a5c;
+  --color-success-text-hover: #2f6b47;
 }
 
 :root {

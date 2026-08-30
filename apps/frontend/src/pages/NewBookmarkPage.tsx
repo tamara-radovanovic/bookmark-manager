@@ -2,14 +2,17 @@ import { useNavigate } from "react-router-dom";
 import type { CreateBookmarkInput } from "@bookmark-manager/shared";
 import { Navbar } from "../components/layout/Navbar";
 import { BookmarkForm } from "../components/bookmarks/BookmarkForm";
+import { useToast } from "../context/ToastContext";
 import { createBookmark } from "../services/bookmarks.service";
 
 export function NewBookmarkPage() {
   const navigate = useNavigate();
+  const { showSuccess } = useToast();
 
   async function handleSubmit(values: CreateBookmarkInput) {
     await createBookmark(values);
     navigate("/dashboard");
+    showSuccess("Bookmark created.");
   }
 
   return (

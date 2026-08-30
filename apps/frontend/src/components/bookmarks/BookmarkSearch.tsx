@@ -27,6 +27,7 @@ export function BookmarkSearch({ onSearch, debounceMs = 300 }: BookmarkSearchPro
       value={value}
       onChange={(event) => setValue(event.target.value)}
       placeholder="Search bookmarks..."
+      aria-label="Search bookmarks"
       className="w-full max-w-md"
     />
   );

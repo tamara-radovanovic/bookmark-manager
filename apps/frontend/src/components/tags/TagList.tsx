@@ -65,15 +65,16 @@ export function TagList({
           value={newTagName}
           onChange={(event) => setNewTagName(event.target.value)}
           placeholder="New tag name"
-          className="rounded-full border-[1.5px] border-border-input bg-[#fffdfe] px-4 py-2 font-body text-sm text-ink-700 outline-none placeholder:text-ink-200 focus:border-blush-400 focus:shadow-[0_0_0_3px_rgba(233,140,174,0.18)]"
+          aria-label="New tag name"
+          className="min-w-0 max-w-64 rounded-full border-[1.5px] border-border-input bg-[#fffdfe] px-4 py-2 font-body text-sm text-ink-700 outline-none placeholder:text-ink-200 focus:border-blush-400 focus:shadow-[0_0_0_3px_rgba(233,140,174,0.18)]"
         />
         <button
           type="button"
           onClick={handleCreate}
           disabled={isCreating || !newTagName.trim()}
-          className="rounded-full border border-blush-300 bg-white px-4 py-2 font-heading text-sm font-semibold text-ink-400 hover:bg-blush-100 hover:text-blush-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="shrink-0 cursor-pointer rounded-full border border-blush-300 bg-white px-4 py-2 font-heading text-sm font-semibold whitespace-nowrap text-ink-400 hover:bg-blush-100 hover:text-blush-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Add tag
+          + Add tag
         </button>
       </div>
 

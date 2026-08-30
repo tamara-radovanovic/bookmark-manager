@@ -15,7 +15,7 @@ export function LoginPage() {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="font-bold text-blush-600 no-underline hover:text-blush-700"
+            className="rounded-sm font-bold text-blush-600 no-underline hover:text-blush-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
           >
             Register
           </Link>
