@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Input } from "../ui/Input";
 
 interface BookmarkSearchProps {
@@ -7,6 +8,7 @@ interface BookmarkSearchProps {
 }
 
 export function BookmarkSearch({ onSearch, debounceMs = 300 }: BookmarkSearchProps) {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
 
   useEffect(() => {
@@ -26,8 +28,8 @@ export function BookmarkSearch({ onSearch, debounceMs = 300 }: BookmarkSearchPro
       type="search"
       value={value}
       onChange={(event) => setValue(event.target.value)}
-      placeholder="Search bookmarks..."
-      aria-label="Search bookmarks"
+      placeholder={t("search.placeholder")}
+      aria-label={t("search.ariaLabel")}
       className="w-full max-w-md"
     />
   );

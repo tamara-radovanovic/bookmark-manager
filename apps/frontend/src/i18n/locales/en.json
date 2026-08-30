@@ -1,0 +1,142 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "optional": "optional"
+  },
+  "nav": {
+    "brand": "Bookmark Manager",
+    "bookmarks": "Bookmarks",
+    "logout": "Log out"
+  },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "subtitle": "Your reading list, right where you left it.",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Start building your reading list.",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log in"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password"
+    },
+    "validation": {
+      "emailRequired": "Email is required.",
+      "passwordRequired": "Password is required.",
+      "passwordMinLength_one": "Password must be at least {{count}} character.",
+      "passwordMinLength_other": "Password must be at least {{count}} characters.",
+      "confirmPasswordRequired": "Please confirm your password.",
+      "passwordMismatch": "Passwords do not match."
+    }
+  },
+  "dashboard": {
+    "title": "Your bookmarks",
+    "savedLinks_one": "{{count}} saved link",
+    "savedLinks_other": "{{count}} saved links",
+    "newBookmark": "+ New bookmark",
+    "tagsLoadError": "Couldn't load your tags.",
+    "bookmarksLoadError": "Couldn't load your bookmarks. Please try again."
+  },
+  "bookmarkList": {
+    "noMatchesTitle": "No matches found",
+    "noMatchesBody": "No bookmarks match your search or tag filters.",
+    "clearFilters": "Clear filters",
+    "emptyTitle": "No bookmarks yet",
+    "emptyBody": "Save your first link to start your shelf.",
+    "addFirst": "+ Add your first bookmark"
+  },
+  "bookmarkCard": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "search": {
+    "placeholder": "Search bookmarks...",
+    "ariaLabel": "Search bookmarks"
+  },
+  "tags": {
+    "newTagPlaceholder": "New tag name",
+    "addTag": "+ Add tag",
+    "createError": "Couldn't create that tag.",
+    "removeTag": "Remove tag {{name}}"
+  },
+  "bookmarkForm": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://",
+    "urlRequired": "URL is required.",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Give it a name",
+    "titleRequired": "Title is required.",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "What is this link for?",
+    "faviconLabel": "Favicon URL",
+    "faviconPlaceholder": "https://site.com/favicon.ico",
+    "tagsLabel": "Tags",
+    "tagAlreadyExists": "You already have a tag with that name.",
+    "tagCreateError": "Couldn't create that tag. Please try again.",
+    "formErrorValidation": "Please check the URL and title.",
+    "formErrorGeneric": "Something went wrong. Please try again.",
+    "saving": "Saving...",
+    "cancel": "Cancel"
+  },
+  "newBookmark": {
+    "title": "New bookmark",
+    "subtitle": "Add a link to your shelf.",
+    "submit": "Create bookmark"
+  },
+  "editBookmark": {
+    "title": "Edit bookmark",
+    "subtitle": "Update this link on your shelf.",
+    "submit": "Save changes",
+    "loadError": "Couldn't load this bookmark."
+  },
+  "confirmDialog": {
+    "deleteBookmarkTitle": "Delete bookmark?",
+    "deleteBookmarkMessage": "Are you sure you want to delete this bookmark?",
+    "deleteTagTitle": "Delete tag?",
+    "deleteTagMessage": "\"{{name}}\" will be removed from any bookmarks that use it.",
+    "cancel": "Cancel",
+    "confirmDelete": "Delete"
+  },
+  "toast": {
+    "bookmarkCreated": "Bookmark created.",
+    "bookmarkUpdated": "Bookmark updated.",
+    "bookmarkDeleted": "Bookmark deleted.",
+    "bookmarkDeleteError": "Couldn't delete this bookmark. Please try again.",
+    "tagDeleted": "Tag deleted.",
+    "tagDeleteError": "Couldn't delete that tag. Please try again.",
+    "tagCreated": "Tag \"{{name}}\" created."
+  },
+  "a11y": {
+    "dismissNotification": "Dismiss notification",
+    "loading": "Loading",
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme"
+  },
+  "errors": {
+    "AUTH_UNAUTHORIZED": "Your session has expired. Please log in again.",
+    "AUTH_INVALID_CREDENTIALS": "Invalid email or password.",
+    "AUTH_EMAIL_ALREADY_EXISTS": "An account with this email already exists.",
+    "AUTH_REFRESH_INVALID": "Your session has expired. Please log in again.",
+    "BOOKMARK_NOT_FOUND": "This bookmark could not be found.",
+    "INVALID_TAG_IDS": "One or more selected tags no longer exist.",
+    "TAG_ALREADY_EXISTS": "You already have a tag with that name.",
+    "TAG_NOT_FOUND": "This tag could not be found.",
+    "VALIDATION_FAILED": "Please check your input and try again.",
+    "GENERIC": "Something went wrong. Please try again."
+  }
+}

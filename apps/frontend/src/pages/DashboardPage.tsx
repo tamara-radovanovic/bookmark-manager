@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { Bookmark, Tag } from "@bookmark-manager/shared";
 import { Navbar } from "../components/layout/Navbar";
 import { BookmarkCardSkeleton } from "../components/bookmarks/BookmarkCardSkeleton";
@@ -14,6 +15,7 @@ import { createTag, deleteTag, listTags } from "../services/tags.service";
 type PendingDelete = { type: "bookmark"; id: string } | { type: "tag"; id: string; name: string };
 
 export function DashboardPage() {
+  const { t } = useTranslation();
   const { showSuccess, showError } = useToast();
 
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -51,8 +53,8 @@ export function DashboardPage() {
   const loadTags = useCallback(() => {
     listTags()
       .then(setTags)
-      .catch(() => setTagsError("Couldn't load your tags."));
-  }, []);
+      .catch(() => setTagsError(t("dashboard.tagsLoadError")));
+  }, [t]);
 
   useEffect(() => {
     loadTags();
@@ -73,7 +75,7 @@ export function DashboardPage() {
       })
       .catch(() => {
         if (!cancelled) {
-          setLoadError("Couldn't load your bookmarks. Please try again.");
+          setLoadError(t("dashboard.bookmarksLoadError"));
         }
       })
       .finally(() => {
@@ -85,7 +87,7 @@ export function DashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, activeTagNames]);
+  }, [search, activeTagNames, t]);
 
   function handleDelete(id: string) {
     setPendingDelete({ type: "bookmark", id });
@@ -111,9 +113,9 @@ export function DashboardPage() {
       try {
         await deleteBookmark(target.id);
         setBookmarks((current) => current.filter((bookmark) => bookmark.id !== target.id));
-        showSuccess("Bookmark deleted.");
+        showSuccess(t("toast.bookmarkDeleted"));
       } catch {
-        showError("Couldn't delete this bookmark. Please try again.");
+        showError(t("toast.bookmarkDeleteError"));
       } finally {
         setDeletingId(null);
       }
@@ -130,16 +132,16 @@ export function DashboardPage() {
           tags: bookmark.tags.filter((tag) => tag.id !== target.id),
         })),
       );
-      showSuccess("Tag deleted.");
+      showSuccess(t("toast.tagDeleted"));
     } catch {
-      showError("Couldn't delete that tag. Please try again.");
+      showError(t("toast.tagDeleteError"));
     }
   }
 
   async function handleCreateTag(name: string) {
     await createTag({ name });
     loadTags();
-    showSuccess(`Tag "${name}" created.`);
+    showSuccess(t("toast.tagCreated", { name }));
   }
 
   return (
@@ -149,17 +151,17 @@ export function DashboardPage() {
         <div className="mb-9 flex flex-wrap items-end justify-between gap-6">
           <div>
             <h1 className="mb-2 font-heading text-[44px] font-bold tracking-tight text-ink-900">
-              Your bookmarks
+              {t("dashboard.title")}
             </h1>
             <p className="font-heading text-lg font-bold text-blush-700">
-              {bookmarks.length} saved {bookmarks.length === 1 ? "link" : "links"}
+              {t("dashboard.savedLinks", { count: bookmarks.length })}
             </p>
           </div>
           <Link
             to="/bookmarks/new"
             className="rounded-full bg-linear-to-b from-blush-400 to-blush-500 px-7.5 py-4.5 font-heading text-lg font-bold text-white no-underline shadow-[0_14px_26px_-14px_rgba(226,105,143,0.85)] hover:from-[#ee7fa4] hover:to-[#d75c84] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
           >
-            + New bookmark
+            {t("dashboard.newBookmark")}
           </Link>
         </div>
 
@@ -206,11 +208,11 @@ export function DashboardPage() {
 
       <ConfirmDialog
         isOpen={pendingDelete !== null}
-        title={pendingDelete?.type === "tag" ? "Delete tag?" : "Delete bookmark?"}
+        title={pendingDelete?.type === "tag" ? t("confirmDialog.deleteTagTitle") : t("confirmDialog.deleteBookmarkTitle")}
         message={
           pendingDelete?.type === "tag"
-            ? `"${pendingDelete.name}" will be removed from any bookmarks that use it.`
-            : "Are you sure you want to delete this bookmark?"
+            ? t("confirmDialog.deleteTagMessage", { name: pendingDelete.name })
+            : t("confirmDialog.deleteBookmarkMessage")
         }
         onConfirm={handleConfirmDelete}
         onCancel={() => setPendingDelete(null)}

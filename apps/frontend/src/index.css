@@ -1,12 +1,17 @@
 @import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap");
 
+/* Class-based dark mode (not just prefers-color-scheme) — toggled by adding
+   .dark to <html>. ThemeContext decides the initial value (saved preference,
+   else the OS setting) and persists changes to localStorage. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-heading: "Quicksand", system-ui, sans-serif;
   --font-body: "Nunito", system-ui, sans-serif;
 
   /* Rose/blush accent — primary brand color and its interactive states. */
-  --color-blush-50: #fdf7f9;
+  --color-blush-50: #f6dfe8;
   --color-blush-100: #fdeef4;
   --color-blush-200: #f6d7e3;
   --color-blush-300: #f0d3de;
@@ -25,7 +30,7 @@
 
   --color-border: #f0cfdb;
   --color-border-light: #f4dde6;
-  --color-border-input: #f0d3de;
+  --color-border-input: #dba3ba;
 
   --color-danger-border: #f6d2cd;
   --color-danger-bg: #fdefed;
@@ -38,6 +43,12 @@
   --color-success-bg: #eef8f0;
   --color-success-text: #3f8a5c;
   --color-success-text-hover: #2f6b47;
+
+  /* Card/button/input surface — a semantic alias for "white" so dark mode
+     can repaint every surface by overriding one token instead of touching
+     every bg-white in the component tree. text-white (button labels on the
+     blush gradient) intentionally stays literal white in both themes. */
+  --color-surface: #ffffff;
 }
 
 :root {
@@ -46,6 +57,43 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark palette — same token names, roles preserved (ink-900 is always
+   "primary text", blush-400/500 are always "the accent"), only the actual
+   lightness values swap. Keeps every component theme-agnostic. */
+.dark {
+  color-scheme: dark;
+
+  --color-surface: #33262d;
+
+  --color-blush-50: #2f2229;
+  --color-blush-100: #3d2a33;
+  --color-blush-200: #5a3c4a;
+  --color-blush-300: #6f4759;
+  --color-blush-600: #ee9db8;
+  --color-blush-700: #f4b8cc;
+
+  --color-ink-900: #f5e9ec;
+  --color-ink-700: #e6d3d9;
+  --color-ink-500: #c7abb5;
+  --color-ink-400: #a98a97;
+  --color-ink-300: #8f7078;
+  --color-ink-200: #6e535a;
+
+  --color-border: #4a3540;
+  --color-border-light: #3d2c34;
+  --color-border-input: #7a5468;
+
+  --color-danger-border: #6b3a35;
+  --color-danger-bg: #3a2220;
+  --color-danger-text: #ef9c90;
+  --color-danger-text-hover: #f5b6ac;
+
+  --color-success-border: #375c44;
+  --color-success-bg: #1f3327;
+  --color-success-text: #8fd4a3;
+  --color-success-text-hover: #a9e0ba;
 }
 
 body {
@@ -64,9 +112,23 @@ body {
   min-height: 100svh;
   background: linear-gradient(
     100deg,
-    rgba(253, 247, 249, 0.55) 0%,
-    rgba(253, 247, 249, 0.86) 26%,
-    rgba(253, 247, 249, 0.97) 42%,
+    rgba(246, 223, 232, 0.55) 0%,
+    rgba(246, 223, 232, 0.86) 26%,
+    rgba(246, 223, 232, 0.97) 42%,
     var(--color-blush-50) 60%
+  );
+}
+
+.dark body {
+  background-color: #241a1f;
+}
+
+.dark #root {
+  background: linear-gradient(
+    100deg,
+    rgba(36, 26, 31, 0.5) 0%,
+    rgba(36, 26, 31, 0.8) 22%,
+    rgba(36, 26, 31, 0.95) 38%,
+    #241a1f 58%
   );
 }

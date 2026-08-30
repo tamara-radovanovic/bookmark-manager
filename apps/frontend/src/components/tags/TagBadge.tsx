@@ -1,4 +1,5 @@
 import type { KeyboardEvent } from "react";
+import { useTranslation } from "react-i18next";
 import type { Tag } from "@bookmark-manager/shared";
 
 interface TagBadgeProps {
@@ -12,6 +13,8 @@ const FOCUS_RING =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2";
 
 export function TagBadge({ tag, isActive, onClick, onRemove }: TagBadgeProps) {
+  const { t } = useTranslation();
+
   // TagBadge doubles as a plain read-only chip (BookmarkCard's tag list, no
   // onClick) and a clickable filter toggle (TagList/BookmarkForm) — a <span>
   // with onClick isn't reachable or activatable by keyboard on its own, so
@@ -44,7 +47,7 @@ export function TagBadge({ tag, isActive, onClick, onRemove }: TagBadgeProps) {
             event.stopPropagation();
             onRemove();
           }}
-          aria-label={`Remove tag ${tag.name}`}
+          aria-label={t("tags.removeTag", { name: tag.name })}
           className={`ml-0.5 cursor-pointer rounded-full leading-none opacity-70 hover:opacity-100 ${FOCUS_RING}`}
         >
           ×

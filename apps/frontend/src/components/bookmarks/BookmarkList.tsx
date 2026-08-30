@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { Bookmark } from "@bookmark-manager/shared";
 import { BookmarkCard } from "./BookmarkCard";
 
@@ -19,30 +20,36 @@ export function BookmarkList({
   hasFilters,
   onClearFilters,
 }: BookmarkListProps) {
+  const { t } = useTranslation();
+
   if (bookmarks.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-blush-200 bg-white/60 px-8 py-16 text-center">
+      <div className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-blush-200 bg-surface/60 px-8 py-16 text-center">
         {hasFilters ? (
           <>
-            <p className="font-heading text-xl font-bold text-ink-900">No matches found</p>
-            <p className="text-lg text-ink-300">No bookmarks match your search or tag filters.</p>
+            <p className="font-heading text-xl font-bold text-ink-900">
+              {t("bookmarkList.noMatchesTitle")}
+            </p>
+            <p className="text-lg text-ink-300">{t("bookmarkList.noMatchesBody")}</p>
             <button
               type="button"
               onClick={onClearFilters}
-              className="mt-2 cursor-pointer rounded-full border border-blush-300 bg-white px-5.5 py-3.25 font-heading text-base font-semibold text-ink-400 hover:bg-blush-100 hover:text-blush-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
+              className="mt-2 cursor-pointer rounded-full border border-blush-300 bg-surface px-5.5 py-3.25 font-heading text-base font-semibold text-ink-400 hover:bg-blush-100 hover:text-blush-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
             >
-              Clear filters
+              {t("bookmarkList.clearFilters")}
             </button>
           </>
         ) : (
           <>
-            <p className="font-heading text-xl font-bold text-ink-900">No bookmarks yet</p>
-            <p className="text-lg text-ink-300">Save your first link to start your shelf.</p>
+            <p className="font-heading text-xl font-bold text-ink-900">
+              {t("bookmarkList.emptyTitle")}
+            </p>
+            <p className="text-lg text-ink-300">{t("bookmarkList.emptyBody")}</p>
             <Link
               to="/bookmarks/new"
               className="mt-2 rounded-full bg-linear-to-b from-blush-400 to-blush-500 px-6 py-3.25 font-heading text-base font-bold text-white no-underline hover:from-[#ee7fa4] hover:to-[#d75c84] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
             >
-              + Add your first bookmark
+              {t("bookmarkList.addFirst")}
             </Link>
           </>
         )}

@@ -85,7 +85,7 @@ export function Modal({ isOpen, onClose, titleId, children, initialFocusRef }: M
         aria-labelledby={titleId}
         tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-sm rounded-3xl border border-blush-100 bg-white p-8 shadow-[0_30px_70px_-30px_rgba(160,90,115,0.5)] focus:outline-none"
+        className="w-full max-w-sm rounded-3xl border border-blush-100 bg-surface p-8 shadow-[0_30px_70px_-30px_rgba(160,90,115,0.5)] focus:outline-none"
       >
         {children}
       </div>

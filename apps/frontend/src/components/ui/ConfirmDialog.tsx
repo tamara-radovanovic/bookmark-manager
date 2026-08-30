@@ -1,4 +1,5 @@
 import { useId, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal } from "./Modal";
 
 interface ConfirmDialogProps {
@@ -14,10 +15,11 @@ export function ConfirmDialog({
   isOpen,
   title,
   message,
-  confirmLabel = "Delete",
+  confirmLabel,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation();
   const titleId = useId();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -32,16 +34,16 @@ export function ConfirmDialog({
           ref={cancelRef}
           type="button"
           onClick={onCancel}
-          className="cursor-pointer rounded-full border border-blush-300 bg-white px-6 py-3.25 font-heading text-base font-semibold text-ink-400 hover:bg-blush-100 hover:text-blush-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
+          className="cursor-pointer rounded-full border border-blush-300 bg-surface px-6 py-3.25 font-heading text-base font-semibold text-ink-400 hover:bg-blush-100 hover:text-blush-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
         >
-          Cancel
+          {t("confirmDialog.cancel")}
         </button>
         <button
           type="button"
           onClick={onConfirm}
-          className="cursor-pointer rounded-full border border-danger-border bg-white px-6 py-3.25 font-heading text-base font-semibold text-danger-text hover:bg-danger-bg hover:text-danger-text-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
+          className="cursor-pointer rounded-full border border-danger-border bg-surface px-6 py-3.25 font-heading text-base font-semibold text-danger-text hover:bg-danger-bg hover:text-danger-text-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 focus-visible:ring-offset-2"
         >
-          {confirmLabel}
+          {confirmLabel ?? t("confirmDialog.confirmDelete")}
         </button>
       </div>
     </Modal>

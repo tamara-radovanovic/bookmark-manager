@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { Bookmark, CreateBookmarkInput } from "@bookmark-manager/shared";
 import { Navbar } from "../components/layout/Navbar";
 import { BookmarkForm } from "../components/bookmarks/BookmarkForm";
 import { Spinner } from "../components/ui/Spinner";
 import { useToast } from "../context/ToastContext";
+import { getApiErrorMessage } from "../i18n/get-api-error-message";
 import { getBookmark, updateBookmark } from "../services/bookmarks.service";
 
 export function EditBookmarkPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { showSuccess } = useToast();
@@ -22,9 +25,9 @@ export function EditBookmarkPage() {
 
     getBookmark(id)
       .then(setBookmark)
-      .catch(() => setLoadError("Couldn't load this bookmark."))
+      .catch((err) => setLoadError(getApiErrorMessage(err, t)))
       .finally(() => setIsLoading(false));
-  }, [id]);
+  }, [id, t]);
 
   async function handleSubmit(values: CreateBookmarkInput) {
     if (!id) {
@@ -32,16 +35,18 @@ export function EditBookmarkPage() {
     }
     await updateBookmark(id, values);
     navigate("/dashboard");
-    showSuccess("Bookmark updated.");
+    showSuccess(t("toast.bookmarkUpdated"));
   }
 
   return (
     <div>
       <Navbar />
       <main className="flex justify-center px-8 pt-18 pb-30">
-        <div className="w-full max-w-160 rounded-[28px] border border-blush-100 bg-white/90 p-12 shadow-[0_24px_60px_-30px_rgba(160,90,115,0.35)]">
-          <h1 className="mb-1.5 font-heading text-[38px] font-bold text-ink-900">Edit bookmark</h1>
-          <p className="mb-8.5 text-lg text-ink-300">Update this link on your shelf.</p>
+        <div className="w-full max-w-160 rounded-[28px] border border-blush-100 bg-surface/90 p-12 shadow-[0_24px_60px_-30px_rgba(160,90,115,0.35)]">
+          <h1 className="mb-1.5 font-heading text-[38px] font-bold text-ink-900">
+            {t("editBookmark.title")}
+          </h1>
+          <p className="mb-8.5 text-lg text-ink-300">{t("editBookmark.subtitle")}</p>
 
           {isLoading && (
             <div className="flex justify-center py-6">
@@ -63,7 +68,7 @@ export function EditBookmarkPage() {
                 tag_ids: bookmark.tags.map((tag) => tag.id),
               }}
               onSubmit={handleSubmit}
-              submitLabel="Save changes"
+              submitLabel={t("editBookmark.submit")}
               onCancel={() => navigate("/dashboard")}
             />
           )}

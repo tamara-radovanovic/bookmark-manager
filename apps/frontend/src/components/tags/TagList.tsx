@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { Tag } from "@bookmark-manager/shared";
+import { getApiErrorMessage } from "../../i18n/get-api-error-message";
 import { TagBadge } from "./TagBadge";
 
 interface TagListProps {
@@ -21,6 +23,7 @@ export function TagList({
   onDeleteTag,
   onCreateTag,
 }: TagListProps) {
+  const { t } = useTranslation();
   const [newTagName, setNewTagName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +39,8 @@ export function TagList({
     try {
       await onCreateTag(name);
       setNewTagName("");
-    } catch {
-      setError("Couldn't create that tag.");
+    } catch (err) {
+      setError(getApiErrorMessage(err, t));
     } finally {
       setIsCreating(false);
     }
@@ -64,17 +67,17 @@ export function TagList({
           type="text"
           value={newTagName}
           onChange={(event) => setNewTagName(event.target.value)}
-          placeholder="New tag name"
-          aria-label="New tag name"
-          className="min-w-0 max-w-64 rounded-full border-[1.5px] border-border-input bg-[#fffdfe] px-4 py-2 font-body text-sm text-ink-700 outline-none placeholder:text-ink-200 focus:border-blush-400 focus:shadow-[0_0_0_3px_rgba(233,140,174,0.18)]"
+          placeholder={t("tags.newTagPlaceholder")}
+          aria-label={t("tags.newTagPlaceholder")}
+          className="min-w-0 max-w-64 rounded-full border-2 border-border-input bg-surface px-4 py-2 font-body text-sm text-ink-700 outline-none placeholder:text-ink-200 focus:border-blush-400 focus:shadow-[0_0_0_3px_rgba(233,140,174,0.18)]"
         />
         <button
           type="button"
           onClick={handleCreate}
           disabled={isCreating || !newTagName.trim()}
-          className="shrink-0 cursor-pointer rounded-full border border-blush-300 bg-white px-4 py-2 font-heading text-sm font-semibold whitespace-nowrap text-ink-400 hover:bg-blush-100 hover:text-blush-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="shrink-0 cursor-pointer rounded-full border border-blush-300 bg-surface px-4 py-2 font-heading text-sm font-semibold whitespace-nowrap text-ink-400 hover:bg-blush-100 hover:text-blush-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          + Add tag
+          {t("tags.addTag")}
         </button>
       </div>
 
