@@ -29,7 +29,10 @@ bookmark-manager/
 │   │   │   ├── components/
 │   │   │   │   ├── layout/
 │   │   │   │   │   ├── Navbar.tsx
-│   │   │   │   │   └── ProtectedRoute.tsx
+│   │   │   │   │   ├── ProtectedRoute.tsx
+│   │   │   │   │   ├── ScrollToTop.tsx
+│   │   │   │   │   ├── LanguageSwitcher.tsx
+│   │   │   │   │   └── ThemeToggle.tsx
 │   │   │   │   ├── auth/
 │   │   │   │   │   ├── LoginForm.tsx
 │   │   │   │   │   └── RegisterForm.tsx
@@ -57,7 +60,8 @@ bookmark-manager/
 │   │   │   │   ├── NewBookmarkPage.tsx
 │   │   │   │   └── EditBookmarkPage.tsx
 │   │   │   ├── services/          # API call functions
-│   │   │   ├── context/           # AuthContext (access token in memory), ToastContext (toast notifications)
+│   │   │   ├── context/           # AuthContext, ToastContext, ThemeContext (light/dark, class strategy)
+│   │   │   ├── i18n/              # react-i18next config, en.json/sr.json, error_code -> translated message
 │   │   │   └── main.tsx
 │   │   ├── index.html
 │   │   └── package.json
@@ -252,7 +256,7 @@ Response 401 (missing/expired/revoked token):
 }
 ```
 
-> **Note on error responses:** errors use a stable `error_code` instead of a hardcoded English message, so the frontend can translate them (see Phase 7 in `PHASES.md`).
+> **Note on error responses:** errors use a stable `error_code` instead of a hardcoded English message. The frontend maps each code to a translated message via `getApiErrorMessage()` (see `apps/frontend/src/i18n/`), falling back to a generic message for a code it doesn't recognize.
 
 ---
 
@@ -424,10 +428,13 @@ Response 204: No content
 
 ### Layout
 
-| Component        | Description                                                          |
-| ---------------- | ---------------------------------------------------------------------|
-| `Navbar`         | Sticky top navigation bar (dashboard link + logout button)           |
-| `ProtectedRoute` | Wrapper that redirects unauthenticated users to `/login`             |
+| Component           | Description                                                              |
+| ------------------- | ------------------------------------------------------------------------- |
+| `Navbar`            | Sticky top navigation bar (dashboard link, logout, theme + language)      |
+| `ProtectedRoute`     | Wrapper that redirects unauthenticated users to `/login`                  |
+| `ScrollToTop`        | Resets scroll position on route change (Navbar is sticky, so a carried-over scroll offset would land the new page's heading underneath it) |
+| `LanguageSwitcher`   | EN/SR segmented toggle — on the Navbar and on the pre-auth pages           |
+| `ThemeToggle`        | Light/dark toggle — on the Navbar and on the pre-auth pages               |
 
 ### Auth
 

@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface SpinnerProps {
   className?: string;
 }
@@ -5,10 +7,12 @@ interface SpinnerProps {
 // role="status" announces itself to screen readers on its own — no visible
 // text needed alongside it.
 export function Spinner({ className = "" }: SpinnerProps) {
+  const { t } = useTranslation();
+
   return (
     <div
       role="status"
-      aria-label="Loading"
+      aria-label={t("a11y.loading")}
       className={`h-8 w-8 animate-spin rounded-full border-4 border-blush-200 border-t-blush-500 ${className}`}
     />
   );

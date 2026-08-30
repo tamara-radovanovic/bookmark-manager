@@ -75,11 +75,11 @@ A phase is not "done" until:
 
 ## Phase 7 — i18n & Theme Switching
 
-- [ ] `react-i18next` setup, `en.json` / `sr.json` translation files
-- [ ] All UI strings routed through `t()`, no hardcoded text
-- [ ] Backend error responses use `error_code`, frontend maps codes to translated messages
-- [ ] Language switcher (persisted in `localStorage`)
-- [ ] Light/dark theme via Tailwind `dark:` class strategy, respects `prefers-color-scheme` as default, persisted in `localStorage`
+- [x] `react-i18next` setup, `en.json` / `sr.json` translation files
+- [x] All UI strings routed through `t()`, no hardcoded text
+- [x] Backend error responses use `error_code`, frontend maps codes to translated messages
+- [x] Language switcher (persisted in `localStorage`)
+- [x] Light/dark theme via Tailwind `dark:` class strategy, respects `prefers-color-scheme` as default, persisted in `localStorage`
 
 ## Phase 8 — Testing
 

@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { isAxiosError } from "axios";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { useAuth } from "../../context/AuthContext";
+import { getApiErrorMessage } from "../../i18n/get-api-error-message";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 
@@ -13,29 +15,35 @@ interface FieldErrors {
   confirmPassword?: string;
 }
 
-function validate(email: string, password: string, confirmPassword: string): FieldErrors {
+function validate(
+  email: string,
+  password: string,
+  confirmPassword: string,
+  t: TFunction,
+): FieldErrors {
   const errors: FieldErrors = {};
 
   if (!email) {
-    errors.email = "Email is required.";
+    errors.email = t("auth.validation.emailRequired");
   }
 
   if (!password) {
-    errors.password = "Password is required.";
+    errors.password = t("auth.validation.passwordRequired");
   } else if (password.length < MIN_PASSWORD_LENGTH) {
-    errors.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+    errors.password = t("auth.validation.passwordMinLength", { count: MIN_PASSWORD_LENGTH });
   }
 
   if (!confirmPassword) {
-    errors.confirmPassword = "Please confirm your password.";
+    errors.confirmPassword = t("auth.validation.confirmPasswordRequired");
   } else if (confirmPassword !== password) {
-    errors.confirmPassword = "Passwords do not match.";
+    errors.confirmPassword = t("auth.validation.passwordMismatch");
   }
 
   return errors;
 }
 
 export function RegisterForm() {
+  const { t } = useTranslation();
   const { register } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -49,7 +57,7 @@ export function RegisterForm() {
     event.preventDefault();
     setFormError(null);
 
-    const errors = validate(email, password, confirmPassword);
+    const errors = validate(email, password, confirmPassword, t);
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) {
       return;
@@ -60,13 +68,7 @@ export function RegisterForm() {
       await register({ email, password });
       navigate("/dashboard");
     } catch (err) {
-      if (isAxiosError(err) && err.response?.status === 409) {
-        setFormError("An account with this email already exists.");
-      } else if (isAxiosError(err) && err.response?.status === 400) {
-        setFormError("Please enter a valid email and password.");
-      } else {
-        setFormError("Something went wrong. Please try again.");
-      }
+      setFormError(getApiErrorMessage(err, t));
     } finally {
       setIsSubmitting(false);
     }
@@ -75,7 +77,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6.5">
       <label className="flex flex-col gap-2.5 font-heading text-lg font-semibold text-ink-500">
-        Email
+        {t("auth.fields.email")}
         <Input
           id="email"
           type="email"
@@ -96,7 +98,7 @@ export function RegisterForm() {
       </label>
 
       <label className="flex flex-col gap-2.5 font-heading text-lg font-semibold text-ink-500">
-        Password
+        {t("auth.fields.password")}
         <Input
           id="password"
           type="password"
@@ -117,7 +119,7 @@ export function RegisterForm() {
       </label>
 
       <label className="flex flex-col gap-2.5 font-heading text-lg font-semibold text-ink-500">
-        Confirm password
+        {t("auth.fields.confirmPassword")}
         <Input
           id="confirmPassword"
           type="password"
@@ -144,7 +146,7 @@ export function RegisterForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="text-xl">
-        {isSubmitting ? "Creating account..." : "Create account"}
+        {isSubmitting ? t("auth.register.submitting") : t("auth.register.submit")}
       </Button>
     </form>
   );

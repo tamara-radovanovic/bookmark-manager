@@ -1,0 +1,144 @@
+{
+  "common": {
+    "cancel": "Otkaži",
+    "delete": "Obriši",
+    "deleting": "Brisanje...",
+    "edit": "Izmeni",
+    "loading": "Učitavanje...",
+    "optional": "opciono"
+  },
+  "nav": {
+    "brand": "Bookmark Manager",
+    "bookmarks": "Obeleživači",
+    "logout": "Odjava"
+  },
+  "auth": {
+    "login": {
+      "title": "Prijava",
+      "subtitle": "Tvoja lista za čitanje, uvek na dohvat ruke.",
+      "submit": "Prijavi se",
+      "submitting": "Prijavljivanje...",
+      "noAccount": "Nemaš nalog?",
+      "registerLink": "Registruj se"
+    },
+    "register": {
+      "title": "Napravi nalog",
+      "subtitle": "Počni da gradiš svoju listu za čitanje.",
+      "submit": "Napravi nalog",
+      "submitting": "Kreiranje naloga...",
+      "hasAccount": "Već imaš nalog?",
+      "loginLink": "Prijavi se"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Lozinka",
+      "confirmPassword": "Potvrdi lozinku"
+    },
+    "validation": {
+      "emailRequired": "Email je obavezan.",
+      "passwordRequired": "Lozinka je obavezna.",
+      "passwordMinLength_one": "Lozinka mora imati najmanje {{count}} karakter.",
+      "passwordMinLength_few": "Lozinka mora imati najmanje {{count}} karaktera.",
+      "passwordMinLength_other": "Lozinka mora imati najmanje {{count}} karaktera.",
+      "confirmPasswordRequired": "Molimo potvrdi lozinku.",
+      "passwordMismatch": "Lozinke se ne poklapaju."
+    }
+  },
+  "dashboard": {
+    "title": "Tvoji obeleživači",
+    "savedLinks_one": "{{count}} sačuvan link",
+    "savedLinks_few": "{{count}} sačuvana linka",
+    "savedLinks_other": "{{count}} sačuvanih linkova",
+    "newBookmark": "+ Novi obeleživač",
+    "tagsLoadError": "Nije uspelo učitavanje tagova.",
+    "bookmarksLoadError": "Nije uspelo učitavanje obeleživača. Pokušaj ponovo."
+  },
+  "bookmarkList": {
+    "noMatchesTitle": "Nema poklapanja",
+    "noMatchesBody": "Nijedan obeleživač ne odgovara tvojoj pretrazi ili filterima.",
+    "clearFilters": "Poništi filtere",
+    "emptyTitle": "Još nema obeleživača",
+    "emptyBody": "Sačuvaj svoj prvi link i započni svoju policu.",
+    "addFirst": "+ Dodaj prvi obeleživač"
+  },
+  "bookmarkCard": {
+    "edit": "Izmeni",
+    "delete": "Obriši",
+    "deleting": "Brisanje..."
+  },
+  "search": {
+    "placeholder": "Pretraži obeleživače...",
+    "ariaLabel": "Pretraga obeleživača"
+  },
+  "tags": {
+    "newTagPlaceholder": "Naziv novog taga",
+    "addTag": "+ Dodaj tag",
+    "createError": "Nije uspelo kreiranje taga.",
+    "removeTag": "Ukloni tag {{name}}"
+  },
+  "bookmarkForm": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://",
+    "urlRequired": "URL je obavezan.",
+    "titleLabel": "Naslov",
+    "titlePlaceholder": "Daj mu ime",
+    "titleRequired": "Naslov je obavezan.",
+    "descriptionLabel": "Opis",
+    "descriptionPlaceholder": "Čemu služi ovaj link?",
+    "faviconLabel": "URL favicon-a",
+    "faviconPlaceholder": "https://sajt.com/favicon.ico",
+    "tagsLabel": "Tagovi",
+    "tagAlreadyExists": "Već imaš tag sa tim nazivom.",
+    "tagCreateError": "Nije uspelo kreiranje taga. Pokušaj ponovo.",
+    "formErrorValidation": "Proveri URL i naslov.",
+    "formErrorGeneric": "Nešto je pošlo po zlu. Pokušaj ponovo.",
+    "saving": "Čuvanje...",
+    "cancel": "Otkaži"
+  },
+  "newBookmark": {
+    "title": "Novi obeleživač",
+    "subtitle": "Dodaj link na svoju policu.",
+    "submit": "Napravi obeleživač"
+  },
+  "editBookmark": {
+    "title": "Izmeni obeleživač",
+    "subtitle": "Ažuriraj ovaj link na svojoj polici.",
+    "submit": "Sačuvaj izmene",
+    "loadError": "Nije uspelo učitavanje ovog obeleživača."
+  },
+  "confirmDialog": {
+    "deleteBookmarkTitle": "Obrisati obeleživač?",
+    "deleteBookmarkMessage": "Da li zaista želiš da obrišeš ovaj obeleživač?",
+    "deleteTagTitle": "Obrisati tag?",
+    "deleteTagMessage": "\"{{name}}\" će biti uklonjen sa svih obeleživača koji ga koriste.",
+    "cancel": "Otkaži",
+    "confirmDelete": "Obriši"
+  },
+  "toast": {
+    "bookmarkCreated": "Obeleživač je sačuvan.",
+    "bookmarkUpdated": "Obeleživač je ažuriran.",
+    "bookmarkDeleted": "Obeleživač je obrisan.",
+    "bookmarkDeleteError": "Nije uspelo brisanje obeleživača. Pokušaj ponovo.",
+    "tagDeleted": "Tag je obrisan.",
+    "tagDeleteError": "Nije uspelo brisanje taga. Pokušaj ponovo.",
+    "tagCreated": "Tag \"{{name}}\" je kreiran."
+  },
+  "a11y": {
+    "dismissNotification": "Zatvori obaveštenje",
+    "loading": "Učitavanje",
+    "switchToLight": "Prebaci na svetlu temu",
+    "switchToDark": "Prebaci na tamnu temu"
+  },
+  "errors": {
+    "AUTH_UNAUTHORIZED": "Tvoja sesija je istekla. Prijavi se ponovo.",
+    "AUTH_INVALID_CREDENTIALS": "Pogrešan email ili lozinka.",
+    "AUTH_EMAIL_ALREADY_EXISTS": "Nalog sa ovim email-om već postoji.",
+    "AUTH_REFRESH_INVALID": "Tvoja sesija je istekla. Prijavi se ponovo.",
+    "BOOKMARK_NOT_FOUND": "Ovaj obeleživač nije pronađen.",
+    "INVALID_TAG_IDS": "Jedan ili više izabranih tagova više ne postoji.",
+    "TAG_ALREADY_EXISTS": "Već imaš tag sa tim nazivom.",
+    "TAG_NOT_FOUND": "Ovaj tag nije pronađen.",
+    "VALIDATION_FAILED": "Proveri unete podatke i pokušaj ponovo.",
+    "GENERIC": "Nešto je pošlo po zlu. Pokušaj ponovo."
+  }
+}

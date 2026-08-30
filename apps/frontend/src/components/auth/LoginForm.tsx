@@ -1,30 +1,33 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { isAxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
+import { getApiErrorMessage } from "../../i18n/get-api-error-message";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import type { TFunction } from "i18next";
 
 interface FieldErrors {
   email?: string;
   password?: string;
 }
 
-function validate(email: string, password: string): FieldErrors {
+function validate(email: string, password: string, t: TFunction): FieldErrors {
   const errors: FieldErrors = {};
 
   if (!email) {
-    errors.email = "Email is required.";
+    errors.email = t("auth.validation.emailRequired");
   }
 
   if (!password) {
-    errors.password = "Password is required.";
+    errors.password = t("auth.validation.passwordRequired");
   }
 
   return errors;
 }
 
 export function LoginForm() {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -37,7 +40,7 @@ export function LoginForm() {
     event.preventDefault();
     setFormError(null);
 
-    const errors = validate(email, password);
+    const errors = validate(email, password, t);
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) {
       return;
@@ -48,11 +51,7 @@ export function LoginForm() {
       await login({ email, password });
       navigate("/dashboard");
     } catch (err) {
-      if (isAxiosError(err) && err.response?.status === 401) {
-        setFormError("Invalid email or password.");
-      } else {
-        setFormError("Something went wrong. Please try again.");
-      }
+      setFormError(getApiErrorMessage(err, t));
     } finally {
       setIsSubmitting(false);
     }
@@ -61,7 +60,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6.5">
       <label className="flex flex-col gap-2.5 font-heading text-lg font-semibold text-ink-500">
-        Email
+        {t("auth.fields.email")}
         <Input
           id="email"
           type="email"
@@ -82,7 +81,7 @@ export function LoginForm() {
       </label>
 
       <label className="flex flex-col gap-2.5 font-heading text-lg font-semibold text-ink-500">
-        Password
+        {t("auth.fields.password")}
         <Input
           id="password"
           type="password"
@@ -109,7 +108,7 @@ export function LoginForm() {
       )}
 
       <Button type="submit" disabled={isSubmitting} className="text-xl">
-        {isSubmitting ? "Logging in..." : "Log in"}
+        {isSubmitting ? t("auth.login.submitting") : t("auth.login.submit")}
       </Button>
     </form>
   );
