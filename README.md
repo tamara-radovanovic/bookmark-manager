@@ -62,7 +62,9 @@ bookmark-manager/
 │   │   │   ├── services/          # API call functions
 │   │   │   ├── context/           # AuthContext, ToastContext, ThemeContext (light/dark, class strategy)
 │   │   │   ├── i18n/              # react-i18next config, en.json/sr.json, error_code -> translated message
+│   │   │   ├── test/              # Vitest setup + renderWithRouter helper (*.test.tsx files sit next to what they test)
 │   │   │   └── main.tsx
+│   │   ├── e2e/                   # Playwright specs (happy-path.spec.ts)
 │   │   ├── index.html
 │   │   └── package.json
 │   │
@@ -475,17 +477,22 @@ Response 204: No content
 
 ## Testing Strategy
 
-_Details to be filled in during Phase 8 (see `PHASES.md`) — this is the agreed baseline:_
-
 | Layer    | Tool                           | Scope                                                                                                    |
 | -------- | ------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| Backend  | Jest (NestJS default)          | Unit tests for services (business logic), integration tests for controllers (using an in-memory/test DB) |
-| Frontend | Vitest + React Testing Library | Unit tests for components/hooks, focus on user-visible behavior, not implementation details              |
-| E2E      | _TBD (e.g. Playwright)_        | Critical flows only: register → login → create bookmark → logout                                         |
+| Backend  | Jest (NestJS default)          | Unit tests for services (business logic), integration tests for controllers (against a throwaway Postgres DB) |
+| Frontend | Vitest + React Testing Library | Unit tests for components, focus on user-visible behavior, not implementation details                    |
+| E2E      | Playwright                     | Critical flow only: register → login → create bookmark → search/filter → edit → delete → logout          |
 
 Minimum bar before a phase is considered "done": auth flow and bookmark CRUD have both unit and integration coverage, including at least one test per known edge case (expired token, duplicate tag, invalid URL, unauthorized access to another user's bookmark).
 
-Implemented so far: `apps/backend/src/auth/auth.service.spec.ts` (unit, mocked dependencies) and `apps/backend/test/auth.e2e-spec.ts` (integration — real HTTP requests through a throwaway `bookmark_manager_test` Postgres database on the same local Docker instance). See "Backend Tests" under Local Setup for how to run them.
+**Current coverage (104 automated tests):**
+- Backend: 33 unit tests (`apps/backend/src/**/*.spec.ts`) + 40 integration tests (`apps/backend/test/*.e2e-spec.ts`) — auth (registration, login, refresh rotation, logout), bookmarks (CRUD, ownership isolation returning 404 not 403, tag filtering incl. multi-tag AND), tags (CRUD, duplicate names, cascade-detach on delete)
+- Frontend: 30 unit tests (`apps/frontend/src/**/*.test.tsx`) — `LoginForm`/`RegisterForm`/`BookmarkForm` (validation, submission, `error_code` → translated message mapping), `ProtectedRoute` (loading/redirect/authenticated states), `TagBadge` (keyboard activation, `aria-pressed`), `BookmarkList` (empty vs. no-matches states), `ConfirmDialog`/`Modal` (focus trap, Escape, backdrop click, focus restored on close)
+- E2E: 1 Playwright spec (`apps/frontend/e2e/happy-path.spec.ts`) covering the full critical flow above against a real backend + Postgres
+
+Not covered by automated tests (manually verified during development instead): the axios refresh-token interceptor's retry-once behavior, and `DashboardPage`'s data-loading error states — both are thin orchestration layers over already-tested pieces, so the cost of mocking every dependency didn't seem worth it relative to the (low) risk.
+
+See "Backend Tests" and "Frontend Tests" under Local Setup for how to run everything.
 
 ---
 
@@ -583,5 +590,15 @@ pnpm --filter backend test:e2e    # Integration tests — needs Docker Postgres 
 ```
 
 `test:e2e` connects to the same local Postgres container as normal dev, but uses a separate `bookmark_manager_test` database (created automatically on first run) so it never touches your real dev data.
+
+### Frontend Tests
+
+```bash
+pnpm --filter frontend test        # Unit tests (Vitest + React Testing Library, jsdom — no servers needed)
+pnpm --filter frontend test:watch  # Same, in watch mode
+pnpm --filter frontend test:e2e    # Playwright — needs the backend (and Docker Postgres) already running
+```
+
+`test:e2e` auto-starts the Vite dev server itself, but not the backend — start that first (`pnpm dev:backend` from the repo root, with Docker Postgres up). It registers a fresh throwaway account (unique email per run) rather than relying on fixtures, so it's safe to run against your normal dev database.
 
 ---
