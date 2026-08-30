@@ -1,11 +1,16 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { Spinner } from "../ui/Spinner";
 
 export function ProtectedRoute() {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div className="flex justify-center p-8">Loading...</div>;
+    return (
+      <div className="flex min-h-svh items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

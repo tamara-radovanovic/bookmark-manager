@@ -1,10 +1,10 @@
 import type { Bookmark, CreateBookmarkInput, UpdateBookmarkInput } from "@bookmark-manager/shared";
 import { api } from "./api";
 
-export function listBookmarks(search?: string, tag?: string): Promise<Bookmark[]> {
-  // axios omits params whose value is undefined, so passing both through
-  // unconditionally is fine even when one or both are unset.
-  return api.get<Bookmark[]>("/bookmarks", { params: { search, tag } }).then((res) => res.data);
+export function listBookmarks(search?: string, tags?: string[]): Promise<Bookmark[]> {
+  // axios omits params whose value is undefined, and serializes an array as
+  // repeated "tags=a&tags=b" keys, which is what the backend expects.
+  return api.get<Bookmark[]>("/bookmarks", { params: { search, tags } }).then((res) => res.data);
 }
 
 export function getBookmark(id: string): Promise<Bookmark> {

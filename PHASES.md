@@ -67,11 +67,11 @@ A phase is not "done" until:
 
 ## Phase 6 — UI Polish
 
-- [ ] Empty states (no bookmarks yet, no search results)
-- [ ] Consistent loading skeletons/spinners
-- [ ] Toasts/notifications for success and error actions
-- [ ] Responsive layout check (mobile/tablet/desktop)
-- [ ] Basic accessibility pass (labels, keyboard navigation, focus states)
+- [x] Empty states (no bookmarks yet, no search results)
+- [x] Consistent loading skeletons/spinners
+- [x] Toasts/notifications for success and error actions
+- [x] Responsive layout check (mobile/tablet/desktop)
+- [x] Basic accessibility pass (labels, keyboard navigation, focus states)
 
 ## Phase 7 — i18n & Theme Switching
 

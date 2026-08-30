@@ -92,11 +92,22 @@ describe("BookmarksService", () => {
     });
 
     it("adds a tag-name subquery condition when given, scoped to the user", async () => {
-      await service.findAllForUser("user-1", undefined, "react");
+      await service.findAllForUser("user-1", undefined, ["react"]);
 
       expect(queryBuilder.andWhere).toHaveBeenCalledWith(expect.stringContaining("bookmark_tags"), {
-        tagName: "react",
+        tagNames: ["react"],
         userId: "user-1",
+        tagCount: 1,
+      });
+    });
+
+    it("requires ALL given tags (AND), not just one of them", async () => {
+      await service.findAllForUser("user-1", undefined, ["react", "tutorial"]);
+
+      expect(queryBuilder.andWhere).toHaveBeenCalledWith(expect.stringContaining("HAVING"), {
+        tagNames: ["react", "tutorial"],
+        userId: "user-1",
+        tagCount: 2,
       });
     });
 

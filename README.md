@@ -36,6 +36,7 @@ bookmark-manager/
 │   │   │   │   ├── bookmarks/
 │   │   │   │   │   ├── BookmarkList.tsx
 │   │   │   │   │   ├── BookmarkCard.tsx
+│   │   │   │   │   ├── BookmarkCardSkeleton.tsx
 │   │   │   │   │   ├── BookmarkForm.tsx
 │   │   │   │   │   └── BookmarkSearch.tsx
 │   │   │   │   ├── tags/
@@ -45,15 +46,18 @@ bookmark-manager/
 │   │   │   │       ├── Button.tsx
 │   │   │   │       ├── Input.tsx
 │   │   │   │       ├── Modal.tsx
+│   │   │   │       ├── ConfirmDialog.tsx
+│   │   │   │       ├── Toast.tsx
+│   │   │   │       ├── ToastContainer.tsx
 │   │   │   │       └── Spinner.tsx
 │   │   │   ├── pages/
 │   │   │   │   ├── LoginPage.tsx
 │   │   │   │   ├── RegisterPage.tsx
-│   │   │   │   └── DashboardPage.tsx
-│   │   │   ├── hooks/
+│   │   │   │   ├── DashboardPage.tsx
+│   │   │   │   ├── NewBookmarkPage.tsx
+│   │   │   │   └── EditBookmarkPage.tsx
 │   │   │   ├── services/          # API call functions
-│   │   │   ├── context/           # AuthContext (holds access token in memory)
-│   │   │   ├── store/             # Global state
+│   │   │   ├── context/           # AuthContext (access token in memory), ToastContext (toast notifications)
 │   │   │   └── main.tsx
 │   │   ├── index.html
 │   │   └── package.json
@@ -261,8 +265,10 @@ GET /bookmarks
 🔒 Protected
 
 Query params (all optional):
-  search=react        -- filters by title or URL
-  tag=tutorial         -- filters by tag name
+  search=react                    -- filters by title or URL
+  tags=tutorial&tags=react        -- filters by tag name; repeat the param for
+                                      more than one — a bookmark must have
+                                      ALL of them (AND, not OR)
 
 Response 200:
 [
@@ -418,10 +424,10 @@ Response 204: No content
 
 ### Layout
 
-| Component        | Description                                              |
-| ---------------- | -------------------------------------------------------- |
-| `Navbar`         | Top navigation bar with logout button                    |
-| `ProtectedRoute` | Wrapper that redirects unauthenticated users to `/login` |
+| Component        | Description                                                          |
+| ---------------- | ---------------------------------------------------------------------|
+| `Navbar`         | Sticky top navigation bar (dashboard link + logout button)           |
+| `ProtectedRoute` | Wrapper that redirects unauthenticated users to `/login`             |
 
 ### Auth
 
@@ -432,12 +438,13 @@ Response 204: No content
 
 ### Bookmarks
 
-| Component        | Description                                        |
-| ---------------- | -------------------------------------------------- |
-| `BookmarkList`   | Renders list of `BookmarkCard` components          |
-| `BookmarkCard`   | Displays single bookmark with tags, edit/delete    |
-| `BookmarkForm`   | Shared form for creating and editing bookmarks     |
-| `BookmarkSearch` | Search input that filters bookmarks by title / URL |
+| Component             | Description                                                                   |
+| --------------------- | ------------------------------------------------------------------------------ |
+| `BookmarkList`        | Renders list of `BookmarkCard`s, or an empty state (no bookmarks / no matches) |
+| `BookmarkCard`        | Displays single bookmark with tags, edit/delete (delete asks for confirmation) |
+| `BookmarkCardSkeleton`| Pulsing placeholder shown while the list is loading                            |
+| `BookmarkForm`        | Shared form for creating and editing bookmarks                                 |
+| `BookmarkSearch`      | Search input that filters bookmarks by title / URL                             |
 
 ### Tags
 
@@ -448,12 +455,14 @@ Response 204: No content
 
 ### UI (Reusable)
 
-| Component | Description                        |
-| --------- | ---------------------------------- |
-| `Button`  | Styled button with variants        |
-| `Input`   | Styled text input with error state |
-| `Modal`   | Generic modal dialog wrapper       |
-| `Spinner` | Loading indicator                  |
+| Component                  | Description                                                                                    |
+| --------------------------- | ----------------------------------------------------------------------------------------------- |
+| `Button`                   | Styled button with variants                                                                     |
+| `Input`                    | Styled text input with error state                                                              |
+| `Modal`                    | Generic accessible modal wrapper (focus trap, Escape/backdrop close, focus restored on close)   |
+| `ConfirmDialog`            | `Modal`-based Yes/No confirmation, replaces `window.confirm()` for deletes                      |
+| `Toast` / `ToastContainer` | Success/error notifications (auto-dismiss, pause on hover, manual close) — see `ToastContext`   |
+| `Spinner`                  | Loading indicator                                                                                |
 
 ---
 

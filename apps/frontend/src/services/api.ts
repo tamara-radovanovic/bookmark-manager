@@ -7,6 +7,11 @@ export const api = axios.create({
   // Sends/receives the httpOnly refresh_token cookie on every request —
   // without this, the browser never attaches it cross-request.
   withCredentials: true,
+  // Serialize array params as repeated "tags=a&tags=b", not axios's default
+  // "tags[]=a&tags[]=b" — Express 5's default query parser doesn't expand
+  // bracket notation, so "tags[]" silently isn't the same as "tags" and the
+  // backend would just never see the filter.
+  paramsSerializer: { indexes: null },
 });
 
 api.interceptors.request.use((config) => {

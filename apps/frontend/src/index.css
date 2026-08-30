@@ -1,7 +1,47 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap");
+
+@theme {
+  --font-heading: "Quicksand", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+
+  /* Rose/blush accent — primary brand color and its interactive states. */
+  --color-blush-50: #fdf7f9;
+  --color-blush-100: #fdeef4;
+  --color-blush-200: #f6d7e3;
+  --color-blush-300: #f0d3de;
+  --color-blush-400: #e98cae;
+  --color-blush-500: #e2698f;
+  --color-blush-600: #d1567f;
+  --color-blush-700: #a83c60;
+
+  /* Warm neutrals used for text — darkest to lightest. */
+  --color-ink-900: #3f2f36;
+  --color-ink-700: #4a3a41;
+  --color-ink-500: #6d545e;
+  --color-ink-400: #8a6a77;
+  --color-ink-300: #9a838d;
+  --color-ink-200: #b09aa4;
+
+  --color-border: #f0cfdb;
+  --color-border-light: #f4dde6;
+  --color-border-input: #f0d3de;
+
+  --color-danger-border: #f6d2cd;
+  --color-danger-bg: #fdefed;
+  --color-danger-text: #c9736a;
+  --color-danger-text-hover: #b0554b;
+
+  /* Sage green — matches the mint book spines in the background art,
+     used for success toasts (mirrors the danger-* structure above). */
+  --color-success-border: #b9dcc2;
+  --color-success-bg: #eef8f0;
+  --color-success-text: #3f8a5c;
+  --color-success-text-hover: #2f6b47;
+}
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -11,4 +51,22 @@
 body {
   margin: 0;
   min-height: 100svh;
+  font-family: var(--font-body);
+  color: var(--color-ink-700);
+  background: var(--color-blush-50) url("/books.jpg") no-repeat left center fixed;
+  background-size: auto 100%;
+}
+
+/* The book photo only needs to show through on the left edge — this
+   gradient fades it into the flat page color so content stays readable
+   no matter how wide the viewport is, matching the reference design. */
+#root {
+  min-height: 100svh;
+  background: linear-gradient(
+    100deg,
+    rgba(253, 247, 249, 0.55) 0%,
+    rgba(253, 247, 249, 0.86) 26%,
+    rgba(253, 247, 249, 0.97) 42%,
+    var(--color-blush-50) 60%
+  );
 }

@@ -4,20 +4,20 @@ import { TagBadge } from "./TagBadge";
 
 interface TagListProps {
   tags: Tag[];
-  activeTagName: string | null;
-  onSelectTag: (name: string | null) => void;
+  activeTagNames: string[];
+  onToggleTag: (name: string) => void;
   onDeleteTag: (id: string) => void;
   onCreateTag: (name: string) => Promise<void>;
 }
 
-// Doubles as the tag management UI: clicking a tag filters the dashboard by
-// it (clicking the active one again clears the filter), each tag carries a
-// delete button, and the input at the bottom creates new tags — there's no
-// separate "manage tags" page in the project plan.
+// Doubles as the tag management UI: clicking a tag toggles it into/out of
+// the active filter set (multiple tags = AND — a bookmark must have all of
+// them), each tag carries a delete button, and the input at the bottom
+// creates new tags — there's no separate "manage tags" page in the project plan.
 export function TagList({
   tags,
-  activeTagName,
-  onSelectTag,
+  activeTagNames,
+  onToggleTag,
   onDeleteTag,
   onCreateTag,
 }: TagListProps) {
@@ -44,41 +44,42 @@ export function TagList({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <TagBadge
               key={tag.id}
               tag={tag}
-              isActive={activeTagName === tag.name}
-              onClick={() => onSelectTag(activeTagName === tag.name ? null : tag.name)}
+              isActive={activeTagNames.includes(tag.name)}
+              onClick={() => onToggleTag(tag.name)}
               onRemove={() => onDeleteTag(tag.id)}
             />
           ))}
         </div>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <input
           type="text"
           value={newTagName}
           onChange={(event) => setNewTagName(event.target.value)}
           placeholder="New tag name"
-          className="rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
+          aria-label="New tag name"
+          className="min-w-0 max-w-64 rounded-full border-[1.5px] border-border-input bg-[#fffdfe] px-4 py-2 font-body text-sm text-ink-700 outline-none placeholder:text-ink-200 focus:border-blush-400 focus:shadow-[0_0_0_3px_rgba(233,140,174,0.18)]"
         />
         <button
           type="button"
           onClick={handleCreate}
           disabled={isCreating || !newTagName.trim()}
-          className="rounded-md border border-gray-300 px-3 py-1 text-sm font-medium disabled:opacity-50"
+          className="shrink-0 cursor-pointer rounded-full border border-blush-300 bg-white px-4 py-2 font-heading text-sm font-semibold whitespace-nowrap text-ink-400 hover:bg-blush-100 hover:text-blush-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Add tag
+          + Add tag
         </button>
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="font-body text-sm text-danger-text">
           {error}
         </p>
       )}

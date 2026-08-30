@@ -16,7 +16,7 @@ export class BookmarksService {
     private readonly tagsRepository: Repository<Tag>,
   ) {}
 
-  async findAllForUser(userId: string, search?: string, tag?: string): Promise<BookmarkDto[]> {
+  async findAllForUser(userId: string, search?: string, tags?: string[]): Promise<BookmarkDto[]> {
     const query = this.bookmarksRepository
       .createQueryBuilder("bookmark")
       .leftJoinAndSelect("bookmark.tags", "tag")
@@ -29,18 +29,24 @@ export class BookmarksService {
       });
     }
 
-    if (tag) {
+    if (tags && tags.length > 0) {
       // A subquery, not a condition on the "tag" join alias above — filtering
       // that alias directly would also throw away every OTHER tag on a
       // matching bookmark, since TypeORM hydrates the "tags" relation only
       // from the joined rows that survive the WHERE.
+      //
+      // AND semantics: a bookmark only matches if it has EVERY requested tag,
+      // not just one of them — GROUP BY + HAVING COUNT(...) = tagCount is
+      // what enforces "all of these", not "any of these".
       query.andWhere(
         `bookmark.id IN (
           SELECT bt.bookmark_id FROM bookmark_tags bt
           INNER JOIN tags t ON t.id = bt.tag_id
-          WHERE t.name = :tagName AND t.user_id = :userId
+          WHERE t.name IN (:...tagNames) AND t.user_id = :userId
+          GROUP BY bt.bookmark_id
+          HAVING COUNT(DISTINCT t.name) = :tagCount
         )`,
-        { tagName: tag, userId },
+        { tagNames: tags, userId, tagCount: tags.length },
       );
     }
 
